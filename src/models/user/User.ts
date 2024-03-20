@@ -3,7 +3,7 @@ import { idValidations, nameValidations } from "@/utils/tableValidations";
 
 const table: Tables = "users";
 
-export default class User implements IUser {
+export default abstract class User implements IUser {
 	private _id: number = NaN;
 	private _name: string = "";
 
@@ -29,9 +29,7 @@ export default class User implements IUser {
 		});
 		this._name = value;
 	}
-	async addUser(): Promise<void> {
-		throw new Error("Implement in frontend or backend");
-	}
+	abstract addUser(): Promise<void>;
 }
 
 interface IUser {

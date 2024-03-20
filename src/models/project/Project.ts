@@ -2,9 +2,8 @@ import { Tables } from "@/Types";
 import { idValidations, nameValidations } from "@/utils/tableValidations";
 
 const table: Tables = "projects";
-const ImplementError = new Error("Implement in frontend or backend");
 
-export default class Project implements IProject {
+export default abstract class Project implements IProject {
 	private _description: string = "";
 	private _user_id: number = NaN;
 	private _id: number = NaN;
@@ -52,21 +51,12 @@ export default class Project implements IProject {
 		});
 		this._id = value;
 	}
-	public async addProject(): Promise<any> {
-		throw ImplementError;
-	}
-	public async updateProject(): Promise<any> {
-		throw ImplementError;
-	}
-	public async deleteProject(): Promise<any> {
-		throw ImplementError;
-	}
-	public async getProjects(): Promise<Array<IProject>> {
-		throw ImplementError;
-	}
+	public abstract addProject(): Promise<any>;
+	public abstract updateProject(): Promise<any>;
+	public abstract deleteProject(): Promise<any>;
+	public abstract getProjects(): Promise<Array<IProject>>;
 }
 
-const x = new Project();
 export interface IProject {
 	name: string;
 	id: number;
