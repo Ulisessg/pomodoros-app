@@ -22,7 +22,7 @@ export function nameValidations({
 		throw new TypeError(`Name String type required ${table} - ${extraMessage}`);
 	}
 	if (name.length === 0) {
-		throw new Error(`Name Username empty ${table} - ${extraMessage}`);
+		throw new Error(`Username empty ${table} - ${extraMessage}`);
 	}
 	if (name.length > maxNameSize) {
 		throw new Error(

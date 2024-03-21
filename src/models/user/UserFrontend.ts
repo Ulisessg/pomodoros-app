@@ -1,10 +1,10 @@
 import User from "./User";
 
 export default class UserFrontend extends User {
-  constructor() {
-    super()
-  }
-  override async addUser(): Promise<void>{
-    throw new Error('Implement Add user frontend')
-  }
+	getUser(): Promise<string> {
+		throw new Error("Method not implemented.");
+	}
+	override async addUser(): Promise<void> {
+		throw new Error("Implement Add user frontend");
+	}
 }

@@ -22,18 +22,23 @@ export default abstract class User implements IUser {
 		return this._name;
 	}
 	public set name(value: string) {
-		nameValidations({
-			maxNameSize: 30,
-			name: value,
-			table,
-		});
+		this.validateUserName(value);
 		this._name = value;
 	}
-	abstract addUser(): Promise<void>;
+	public validateUserName(newUsername?: string): void {
+		nameValidations({
+			maxNameSize: 30,
+			name: newUsername || this.name,
+			table,
+		});
+	}
+	abstract addUser(): Promise<IUser>;
+	abstract getUser(): Promise<GetUser>;
 }
 
-interface IUser {
+export type GetUser = IUser | undefined;
+
+export interface IUser {
 	id: number;
 	name: string;
-	addUser: () => void;
 }
