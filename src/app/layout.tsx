@@ -2,6 +2,7 @@
 import { GlobalStyles } from "d-system";
 import { SessionProvider } from "./Providers";
 import { ProjectsCtxProvider } from "@/context/ProjectsCtx";
+import { StagesCtxProvider } from "@/context/StagesCtx";
 
 export default function RootLayout({
   children,
@@ -15,13 +16,15 @@ export default function RootLayout({
       </head>
       <SessionProvider>
         <ProjectsCtxProvider>
-          <body>
-            <div id="__next">
-              <GlobalStyles footer={false}>
-                {children}
-              </GlobalStyles>
-            </div>
-          </body>
+          <StagesCtxProvider>
+            <body>
+              <div id="__next">
+                <GlobalStyles footer={false}>
+                  {children}
+                </GlobalStyles>
+              </div>
+            </body>
+          </StagesCtxProvider>
         </ProjectsCtxProvider>
       </SessionProvider>
     </html>

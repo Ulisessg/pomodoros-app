@@ -2,6 +2,7 @@
 import { GetProjectsResponse } from "@/app/api/projects/route";
 import Project, { IProject } from "./Project";
 import axios from "axios";
+import { CreateProjectResponse } from "@/app/api/projects/POST";
 
 const ImplementError = new Error("Implement in frontend");
 
@@ -9,14 +10,17 @@ export default class ProjectFrontend extends Project {
 	constructor() {
 		super();
 	}
-	async addProject(): Promise<IProject> {
+	async addProject(): Promise<CreateProjectResponse> {
 		this.validateName();
 
-		const addProjectResult = await axios.post<IProject>("/api/projects", {
-			name: this.name,
-			description: this.description,
-			user_id: this.user_id,
-		});
+		const addProjectResult = await axios.post<CreateProjectResponse>(
+			"/api/projects",
+			{
+				name: this.name,
+				description: this.description,
+				user_id: this.user_id,
+			}
+		);
 		return addProjectResult.data;
 	}
 

@@ -1,4 +1,5 @@
 import { ProjectsCtx } from "@/context/ProjectsCtx";
+import { StagesCtx } from "@/context/StagesCtx";
 import ProjectFrontend from "@/models/project/ProjectFrontend";
 import { UseInputsReturn, useInputs } from "d-system";
 import { MouseEvent, useContext, useMemo } from "react";
@@ -7,6 +8,8 @@ export default function useCreateUpdateProject({
 	projectDescription,
 	projectName,
 }: UseCreateUpdateProjectArgs): UseCreateUpdateProjectReturn {
+	const { addStages } = useContext(StagesCtx);
+
 	const { userId, addProject } = useContext(ProjectsCtx);
 	const actionMessage = useMemo(() => {
 		if (typeof projectName === "string") {
@@ -58,8 +61,9 @@ export default function useCreateUpdateProject({
 		if (typeof projectName === "string") {
 			Project.updateProject();
 		} else {
-			const projectCreated = await Project.addProject();
-			addProject(projectCreated);
+			const projectAndStagesData = await Project.addProject();
+			addStages(projectAndStagesData.project.id, projectAndStagesData.stages);
+			addProject({ ...projectAndStagesData.project });
 		}
 	};
 

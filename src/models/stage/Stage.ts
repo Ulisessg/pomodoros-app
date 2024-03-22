@@ -24,46 +24,63 @@ export default abstract class Stage implements IStage {
 		return this._name;
 	}
 	public set name(value: string) {
-		nameValidations({
-			maxNameSize: 50,
-			name: value,
-			table,
-		});
 		this._name = value;
 	}
 	public get color(): string {
 		return this._color;
 	}
 	public set color(value: string) {
-		nameValidations({
-			maxNameSize: 6,
-			name: value,
-			table,
-			extraMessage: "Color name",
-		});
-
-		const valueUpperCase = value.toUpperCase();
-		if (valueUpperCase.match(HexColorRegex) === null) {
-			throw new Error(
-				`Invalid CSS color ${valueUpperCase}. Pattern ${HexColorRegex}`
-			);
-		}
-
-		this._color = valueUpperCase;
+		const colorUpperCase = this.validateColor(value);
+		this._color = colorUpperCase;
 	}
 	public get project_id(): number {
 		return this._project_id;
 	}
 	public set project_id(value: number) {
-		idValidations({
-			id: value,
-			table,
-			extraMessage: "project_id",
-		});
+		this.validateId(value);
 		this._project_id = value;
 	}
 
-	public abstract addStage(): Promise<any>;
+	// Validations
+	public validateId(newId?: number) {
+		const id = newId || this.id;
+		idValidations({
+			id: id,
+			table,
+		});
+	}
+
+	public validateColor(col?: string): string {
+		const color = col || this.color;
+
+		nameValidations({
+			maxNameSize: 6,
+			name: color,
+			table,
+			extraMessage: "Color name",
+		});
+
+		const colorUpperCase = color.toUpperCase();
+
+		if (colorUpperCase.match(HexColorRegex) === null) {
+			throw new Error(
+				`Invalid CSS color ${colorUpperCase}. Pattern ${HexColorRegex}`
+			);
+		}
+		return colorUpperCase;
+	}
+
+	public validateName(nName?: string) {
+		const name = nName || this.name;
+		nameValidations({
+			maxNameSize: 50,
+			name: name,
+			table,
+		});
+	}
+
+	// eslint-disable-next-line no-unused-vars
+	public abstract addStages(stages: AddStagesParam): Promise<IStage[]>;
 	public abstract updateStage(): Promise<any>;
 	public abstract deleteStage(): Promise<any>;
 	public abstract getStages(): Promise<Array<IStage>>;
@@ -75,3 +92,5 @@ export interface IStage {
 	color: string;
 	project_id: number;
 }
+
+export type AddStagesParam = Array<Omit<IStage, "id">>;

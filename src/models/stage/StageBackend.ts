@@ -1,11 +1,52 @@
-import Stage, { IStages } from "./Stage";
+import mariaDbPool from "@/utils/mariaDbPool";
+import Stage, { AddStagesParam, IStage } from "./Stage";
 
 export default class StageBackend extends Stage {
 	constructor() {
 		super();
 	}
-	public addStage(): Promise<any> {
-		throw new Error("Method not implemented.");
+	public async addStages(stages: AddStagesParam): Promise<IStage[]> {
+		let errorInValidations: null | Error = null;
+		const stagesData: StageArray = [];
+		stages.some((stg, index) => {
+			try {
+				this.validateId(stg.project_id);
+				this.validateColor(stg.color);
+				this.validateName(stg.name);
+				// Verify whether the order of array values matches the order in the insertion script
+				stagesData.push([
+					null as unknown as number,
+					stg.name,
+					stg.color,
+					stg.project_id,
+				]);
+				return false;
+			} catch (error) {
+				errorInValidations = new Error(
+					`Error adding stages, stage with index ${index} caused`,
+					{
+						cause: error,
+					}
+				);
+				return true;
+			}
+		});
+		if (errorInValidations !== null) throw errorInValidations;
+
+		const connection = await mariaDbPool.getConnection();
+
+		try {
+			const batchResult = await connection.batch<IStage[]>(
+				`INSERT INTO stages (id, name, color, project_id) VALUES (?,?,?,?) RETURNING id,name, color, project_id`,
+				stagesData
+			);
+
+			return batchResult;
+		} catch (error) {
+			throw error;
+		} finally {
+			await connection.end();
+		}
 	}
 	public updateStage(): Promise<any> {
 		throw new Error("Method not implemented.");
@@ -13,7 +54,9 @@ export default class StageBackend extends Stage {
 	public deleteStage(): Promise<any> {
 		throw new Error("Method not implemented.");
 	}
-	public getStages(): Promise<IStages[]> {
+	public getStages(): Promise<IStage[]> {
 		throw new Error("Method not implemented.");
 	}
 }
+// IStage keys into array
+type StageArray = Array<[number, string, string, number]>;
