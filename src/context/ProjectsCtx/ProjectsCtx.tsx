@@ -2,8 +2,8 @@
 import { IProject } from "@/models/project/Project";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { FC, ReactNode, createContext, useEffect, useState } from "react";
-import getProjects from "./getProjects";
-import { GetProjectsResponse } from "@/app/api/projects/route";
+import ProjectFrontend from "@/models/project/ProjectFrontend";
+import { redirectToProjectCreated } from "@/app/actions";
 
 const initialState: ProjectsCtxState = {
   projects: [],
@@ -12,6 +12,7 @@ const initialState: ProjectsCtxState = {
   userId: NaN,
   addProject: () => {}
 }
+
 
 export const ProjectsCtx = createContext<ProjectsCtxState>(initialState)
 
@@ -22,22 +23,30 @@ export const ProjectsCtxProvider: FC<{children: ReactNode}> = ({children}) => {
   const {isLoading: userInfoIsLoading} = useUser()
   const [userId, setUserId] = useState<number>(initialState.userId)
 
-  const handleSetProjects = (projectsData: GetProjectsResponse) => {
-    setProjects(projectsData.projects)
-    setGetProjectsError(projectsData.error)
-    setGetProjectsIsLoading(false)
-    setUserId(projectsData.userId)
-  }
-
   const addProject = (project: IProject) => {
     setProjects((prev) => [...prev, project])
+    redirectToProjectCreated(project.id)
   }
   
   useEffect(() => {
-    void getProjects({
-      handleSetProjects,
-      isUserLoading: userInfoIsLoading
-    })
+    const getProjects = async () => {
+      const Project = new ProjectFrontend();
+
+      if (!userInfoIsLoading) {
+        try {
+          const projectsData = await Project.getProjects();
+          setProjects(projectsData)
+          setGetProjectsError(false)
+          setGetProjectsIsLoading(false)
+          setUserId(Project.user_id)
+        } catch (error) {
+          setUserId(NaN)
+          setGetProjectsError(true)
+          setGetProjectsIsLoading(false)
+        }
+      }
+    }
+    void getProjects()
   }, [userInfoIsLoading])
   return <ProjectsCtx.Provider value={{
     projects,
