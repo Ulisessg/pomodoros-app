@@ -7,8 +7,31 @@ export default class ProjectBackend extends Project {
 	constructor() {
 		super();
 	}
-	async addProject(): Promise<any> {
-		throw ImplementError;
+	async addProject(): Promise<IProject> {
+		const connection = await mariaDbPool.getConnection();
+		try {
+			this.validateUserId();
+			this.validateName();
+			const projectWithSameName = await connection.query(
+				"SELECT * FROM projects WHERE projects.name = ?",
+				[this.name]
+			);
+			if (projectWithSameName.length > 0) {
+				throw new Error("Project exists");
+			}
+			const projectCreated: [IProject] = await connection.query(
+				`INSERT INTO projects 
+				(id, name, description, user_id) 
+				VALUES 
+				(?, ?, ?, ?) RETURNING id, name, description, user_id`,
+				[null, this.name, this.description, this.user_id]
+			);
+			return projectCreated[0];
+		} catch (error) {
+			throw error;
+		} finally {
+			await connection.end();
+		}
 	}
 	async deleteProject(): Promise<any> {
 		throw ImplementError;
@@ -17,9 +40,7 @@ export default class ProjectBackend extends Project {
 		throw ImplementError;
 	}
 	async getProjects(): Promise<IProject[]> {
-		if (!Number.isInteger(this.user_id)) {
-			throw new Error("Invalid user_id");
-		}
+		this.validateUserId();
 		const connection = await mariaDbPool.getConnection();
 		try {
 			const projects: IProject[] = await connection.query(

@@ -30,7 +30,7 @@ export default class UserBackend extends User {
 		const connection = await mariaDbPool.getConnection();
 		try {
 			const user: [IUser] = await connection.query(
-				`INSERT INTO users (id, username) VALUES (?, ?) RETURNING id, username`,
+				`INSERT INTO users (id, username) VALUES (?, ?) RETURNING id, username as name`,
 				[null, this.name]
 			);
 			await connection.end();

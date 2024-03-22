@@ -1,6 +1,7 @@
 'use client'
 import { GlobalStyles } from "d-system";
 import { SessionProvider } from "./Providers";
+import { ProjectsCtxProvider } from "@/context/ProjectsCtx";
 
 export default function RootLayout({
   children,
@@ -13,6 +14,7 @@ export default function RootLayout({
         <title>Pomodoros app</title>
       </head>
       <SessionProvider>
+        <ProjectsCtxProvider>
           <body>
             <div id="__next">
               <GlobalStyles footer={false}>
@@ -20,6 +22,7 @@ export default function RootLayout({
               </GlobalStyles>
             </div>
           </body>
+        </ProjectsCtxProvider>
       </SessionProvider>
     </html>
   );

@@ -4,7 +4,7 @@ import { idValidations, nameValidations } from "@/utils/tableValidations";
 
 const table: Tables = "stages";
 
-export default abstract class Stage implements IStages {
+export default abstract class Stage implements IStage {
 	private _id: number = NaN;
 	private _name: string = "";
 	private _color: string = "";
@@ -66,10 +66,10 @@ export default abstract class Stage implements IStages {
 	public abstract addStage(): Promise<any>;
 	public abstract updateStage(): Promise<any>;
 	public abstract deleteStage(): Promise<any>;
-	public abstract getStages(): Promise<Array<IStages>>;
+	public abstract getStages(): Promise<Array<IStage>>;
 }
 
-export interface IStages {
+export interface IStage {
 	id: number;
 	name: string;
 	color: string;

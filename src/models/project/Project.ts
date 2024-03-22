@@ -22,11 +22,7 @@ export default abstract class Project implements IProject {
 		return this._user_id;
 	}
 	public set user_id(value: number) {
-		idValidations({
-			id: value,
-			table,
-			extraMessage: "user_id",
-		});
+		this.validateUserId(value);
 		this._user_id = value;
 	}
 
@@ -34,27 +30,65 @@ export default abstract class Project implements IProject {
 		return this._name;
 	}
 	public set name(value: string) {
-		nameValidations({
-			maxNameSize: 50,
-			name: value,
-			table,
-		});
+		this.validateName(value);
 		this._name = value;
 	}
 	public get id(): number {
 		return this._id;
 	}
 	public set id(value: number) {
-		idValidations({
-			id: value,
-			table,
-		});
+		this.validateId(value);
 		this._id = value;
 	}
-	public abstract addProject(): Promise<any>;
+
+	public validateName(newName?: string) {
+		if (newName) {
+			nameValidations({
+				maxNameSize: 50,
+				name: newName,
+				table,
+			});
+			return;
+		}
+		nameValidations({
+			maxNameSize: 50,
+			name: this.name,
+			table,
+		});
+	}
+	public validateId(newId?: number) {
+		if (newId) {
+			idValidations({
+				id: newId,
+				table,
+			});
+			return;
+		}
+		idValidations({
+			id: this.id,
+			table,
+		});
+	}
+	public validateUserId(newId?: number) {
+		if (newId) {
+			idValidations({
+				id: newId,
+				table,
+				extraMessage: "user_id",
+			});
+			return;
+		}
+		idValidations({
+			id: this.user_id,
+			table,
+			extraMessage: "user_id",
+		});
+	}
+
+	public abstract addProject(): Promise<IProject>;
 	public abstract updateProject(): Promise<any>;
 	public abstract deleteProject(): Promise<any>;
-	public abstract getProjects(): Promise<Array<IProject>>;
+	public abstract getProjects(): Promise<IProject[]>;
 }
 
 export interface IProject {
