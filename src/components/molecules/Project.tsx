@@ -7,7 +7,7 @@ import { theme } from "d-system";
 const Project: FC<ProjectProps> = ({project}) => {
   const projectHasDescription = Boolean(project.description.length > 0)
   return <ProjectContainer>
-    <ProjectLink href="#">
+    <ProjectLink href={`/project/${project.id}`}>
       <ProjectData>
         <ProjectTitle>{project.name}{projectHasDescription && ':'}</ProjectTitle>
         {projectHasDescription && <ProjectDescription>
