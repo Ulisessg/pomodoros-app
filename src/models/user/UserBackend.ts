@@ -18,10 +18,10 @@ export default class UserBackend extends User {
 		WHERE users.username = ?`,
 				[this.name]
 			);
-			connection.end();
+			await connection.end();
 			return user[0];
 		} catch (error) {
-			connection.end();
+			await connection.end();
 			throw error;
 		}
 	}
@@ -33,10 +33,10 @@ export default class UserBackend extends User {
 				`INSERT INTO users (id, username) VALUES (?, ?) RETURNING id, username`,
 				[null, this.name]
 			);
-			connection.end();
+			await connection.end();
 			return user[0];
 		} catch (error) {
-			connection.end();
+			await connection.end();
 			throw new UserError("Error creating user", {
 				cause: error,
 			});

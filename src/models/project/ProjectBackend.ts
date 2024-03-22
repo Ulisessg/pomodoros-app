@@ -33,7 +33,7 @@ export default class ProjectBackend extends Project {
 			);
 			return projects;
 		} catch (error) {
-			connection.end();
+			await connection.end();
 			throw error;
 		}
 	}
