@@ -13,8 +13,8 @@ export default class ProjectBackend extends Project {
 			this.validateUserId();
 			this.validateName();
 			const projectWithSameName = await connection.query(
-				"SELECT * FROM projects WHERE projects.name = ?",
-				[this.name]
+				"SELECT * FROM projects WHERE projects.name = ? AND projects.user_id = ?",
+				[this.name, this.user_id]
 			);
 			if (projectWithSameName.length > 0) {
 				throw new Error("Project exists");
