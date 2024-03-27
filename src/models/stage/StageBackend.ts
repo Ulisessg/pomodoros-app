@@ -54,8 +54,19 @@ export default class StageBackend extends Stage {
 	public deleteStage(): Promise<any> {
 		throw new Error("Method not implemented.");
 	}
-	public getStages(): Promise<IStage[]> {
-		throw new Error("Method not implemented.");
+	public async getStages(): Promise<IStage[]> {
+		const connection = await mariaDbPool.getConnection();
+		try {
+			const stages: IStage[] = await connection.query(
+				"SELECT * FROM stages WHERE stages.project_id = ?",
+				[this.project_id]
+			);
+			return stages;
+		} catch (error) {
+			throw error;
+		} finally {
+			await connection.end();
+		}
 	}
 }
 // IStage keys into array

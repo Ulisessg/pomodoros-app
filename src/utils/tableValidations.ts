@@ -1,17 +1,29 @@
 import { Tables } from "@/Types";
 
+/**
+ * @deprecated - Deprecated: Use this functions is no longer recommended, instead extend classes using TableValidations
+ * @param param0
+ */
 export function idValidations({ id, table, extraMessage }: IdValidations) {
 	if (typeof id !== "number") {
-		throw new TypeError(`Id number type required. ${table} - ${extraMessage}`);
+		throw new ValidationTypeError(
+			`Id number type required. ${table} - ${extraMessage}`
+		);
 	}
 	if (isNaN(id)) {
-		throw new Error(`Id NaN not allowed as id. ${table} - ${extraMessage}`);
+		throw new ValidationError(
+			`Id NaN not allowed as id. ${table} - ${extraMessage}`
+		);
 	}
 	if (id < 0) {
-		throw new Error(`Id invalid. ${table} - ${extraMessage}`);
+		throw new ValidationError(`Id invalid. ${table} - ${extraMessage}`);
 	}
 }
 
+/**
+ * @deprecated - Deprecated: Use this functions is no longer recommended, instead extend classes using TableValidations
+ * @param param0
+ */
 export function nameValidations({
 	name,
 	maxNameSize,
@@ -19,13 +31,15 @@ export function nameValidations({
 	extraMessage,
 }: NameValidations) {
 	if (typeof name !== "string") {
-		throw new TypeError(`Name String type required ${table} - ${extraMessage}`);
+		throw new ValidationTypeError(
+			`Name String type required ${table} - ${extraMessage}`
+		);
 	}
 	if (name.length === 0) {
-		throw new Error(`Username empty ${table} - ${extraMessage}`);
+		throw new ValidationError(`Username empty ${table} - ${extraMessage}`);
 	}
 	if (name.length > maxNameSize) {
-		throw new Error(
+		throw new ValidationError(
 			`Name Username length more than 30 ${table} - ${extraMessage}`
 		);
 	}
@@ -41,4 +55,16 @@ interface NameValidations {
 	maxNameSize: number;
 	table: Tables;
 	extraMessage?: string;
+}
+
+export class ValidationError extends Error {
+	constructor(message?: string, options?: ErrorOptions) {
+		super(message, options);
+	}
+}
+
+export class ValidationTypeError extends TypeError {
+	constructor(message?: string, options?: ErrorOptions) {
+		super(message, options);
+	}
 }
