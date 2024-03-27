@@ -1,51 +1,22 @@
 "use client";
 import { DefaultSelectValue } from "@/constants";
 import { StagesCtx } from "@/context/StagesCtx";
-import { TaskCtx } from "@/context/TaskCtx";
 import useGetProjectId from "@/hooks/useGetProjectId";
 import { IStage } from "@/models/stage/Stage";
-import TaskFrontend from "@/models/task/TaskFrontend";
-import { Button, Details, Form, Input, Select, useInputs } from "d-system";
-import React, { MouseEvent, useContext, useMemo } from "react";
+import { Button, Details, Form, Input, Select } from "d-system";
+import React, { useContext, useMemo } from "react";
 import styled from "styled-components";
+import useCreateUpdateTask from "./useCreateUpdateTask";
 
 const CreateUpdateTask = () => {
 	const projectId = useGetProjectId();
-	const { addTask } = useContext(TaskCtx);
-	const {
-		inputsData,
-		onChange,
-		formIsValid,
-		inputsErrors,
-		checkFormValidity,
-		restartInputs,
-	} = useInputs(
-		{
-			task: "",
-			description: "",
-			stage: DefaultSelectValue,
-		},
-		true
-	);
-
 	const { stages } = useContext(StagesCtx);
 	const stagesData: IStage[] = useMemo(() => {
 		return stages[Number(projectId)];
 	}, [projectId, stages]);
+	const { inputsData, inputsErrors, onChange, formIsValid, handleCreateTask } =
+		useCreateUpdateTask();
 
-	const handleCreateTask = async (e: MouseEvent<HTMLButtonElement>) => {
-		e.preventDefault();
-		if (!checkFormValidity()) return;
-		try {
-			const TaskFront = new TaskFrontend();
-			TaskFront.name = inputsData.task;
-			TaskFront.description = inputsData.description;
-			TaskFront.stage_id = Number(inputsData.stage);
-			const taskCreated = await TaskFront.addTask();
-			addTask(Number(inputsData.stage), taskCreated);
-			restartInputs("all");
-		} catch {}
-	};
 	return (
 		<CreateUpdateTaskContainer>
 			<DetailsStyles summary="Crear tarea">
