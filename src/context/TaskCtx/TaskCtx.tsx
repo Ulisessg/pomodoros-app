@@ -60,7 +60,10 @@ export const TaskCtxProvider: FC<TaskCtxProps> = ({ children }) => {
 				const targetStageTasks = prev[Number(newStageId)];
 				const targetStageTasksUpdated = [...targetStageTasks];
 				// Inset the task at the beginning of the stage
-				targetStageTasksUpdated.unshift(taskToMove);
+				targetStageTasksUpdated.unshift({
+					...taskToMove,
+					stage_id: newStageId,
+				});
 
 				return {
 					...prev,

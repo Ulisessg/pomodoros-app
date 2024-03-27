@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { DragEvent, FC } from "react";
 import styled from "styled-components";
 
-const Task: FC<TaskProps> = ({ task, taskIndex, taskStageId }) => {
+const Task: FC<TaskProps> = ({ task, taskIndex }) => {
 	const handleOnDragStart = (e: DragEvent<HTMLAnchorElement>) => {
 		const format = "text/plain";
 		e.dataTransfer.clearData();
@@ -15,13 +15,14 @@ const Task: FC<TaskProps> = ({ task, taskIndex, taskStageId }) => {
 		const DragEventDataString = JSON.stringify(dragEventData);
 		e.dataTransfer.setData(format, DragEventDataString);
 	};
+
 	return (
 		<>
 			<TaskContainer
 				href={"#"}
 				draggable
 				onDragStart={handleOnDragStart}
-				data-task-stage-id={taskStageId}
+				data-task-stage-id={task.stage_id}
 				data-task-index={taskIndex}
 			>
 				<p>{task.name}</p>
