@@ -8,13 +8,18 @@ export default class TableValidations {
 		if (table.length < 3) throw new Error("Table name too short");
 		this.table = table;
 	}
-	public validateName(name: string, maxNameSize: number, extraMessage: string) {
+	public validateName(
+		name: string,
+		maxNameSize: number,
+		extraMessage: string,
+		minSize: number = 1
+	) {
 		if (typeof name !== "string") {
 			throw new ValidationTypeError(
 				`Name String type required ${this.table} - ${extraMessage}`
 			);
 		}
-		if (name.length === 0) {
+		if (name.length < minSize) {
 			throw new ValidationError(
 				`Username empty ${this.table} - ${extraMessage}`
 			);

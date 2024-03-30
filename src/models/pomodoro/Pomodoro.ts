@@ -1,46 +1,49 @@
 import { Tables } from "@/Types";
-import { idValidations, nameValidations } from "@/utils/tableValidations";
+import TableValidations from "../TableValidations";
+import { TimeRegex } from "@/utils/regex";
 
 const table: Tables = "pomodoros";
 
-export default abstract class Pomodoro implements IPomodoro {
+export default abstract class task_idPomodoro
+	extends TableValidations
+	implements IPomodoro
+{
 	private _id: number = NaN;
-	private _name: string = "";
+	private _title: string = "";
 	private _duration: string = "";
 	private _rest_duration: string = "";
 	private _task_id: number = NaN;
+
+	constructor() {
+		super(table);
+	}
 
 	public get id(): number {
 		return this._id;
 	}
 	public set id(value: number) {
-		idValidations({
-			id: value,
-			table,
-		});
+		this.validateId(value, "id");
 		this._id = value;
 	}
-	public get name(): string {
-		return this._name;
+	public get title(): string {
+		return this._title;
 	}
-	public set name(value: string) {
-		nameValidations({
-			maxNameSize: 50,
-			name: value,
-			table,
-		});
-		this._name = value;
+	public set title(value: string) {
+		this.validateName(value, 50, "title", 0);
+		this._title = value;
 	}
 	public get duration(): string {
 		return this._duration;
 	}
 	public set duration(value: string) {
+		this.validateDuration(value);
 		this._duration = value;
 	}
 	public get rest_duration(): string {
 		return this._rest_duration;
 	}
 	public set rest_duration(value: string) {
+		this.validateDuration(value);
 		this._rest_duration = value;
 	}
 
@@ -48,12 +51,16 @@ export default abstract class Pomodoro implements IPomodoro {
 		return this._task_id;
 	}
 	public set task_id(value: number) {
-		idValidations({
-			id: value,
-			table,
-			extraMessage: "task_id",
-		});
+		this.validateId(value, "task_id");
 		this._task_id = value;
+	}
+
+	public validateDuration(duration: string) {
+		if (typeof duration !== "string")
+			throw new TypeError("Duration must be string");
+		if (duration.match(TimeRegex) === null) {
+			throw new Error("Bad time format");
+		}
 	}
 
 	public abstract addPomodoro(): Promise<IPomodoro>;
@@ -64,7 +71,7 @@ export default abstract class Pomodoro implements IPomodoro {
 
 export interface IPomodoro {
 	id: number;
-	name: string;
+	title: string;
 	// 00:00:00
 	duration: string;
 	// 00:00:00
