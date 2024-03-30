@@ -1,20 +1,36 @@
-import { ITask } from "@/models/task/Task";
-import React, { FC } from "react";
+import React, { FC, useContext, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import TaskDescription from "../molecules/TaskDescription";
-import { theme } from "d-system";
+import { LoadingSpinner, theme } from "d-system";
+import { TaskCtx } from "@/context/TaskCtx";
+import getFirstObjectKey from "@/utils/getFirstObjectKey";
 
-const TaskDetails: FC<TaskDetailsProps> = ({ task }) => {
+const TaskDetails: FC<TaskDetailsProps> = ({ project, stage, taskId }) => {
+	const { tasks: tasksGroupedByStage, getTasks } = useContext(TaskCtx);
+	const taskData = useMemo(() => {
+		return tasksGroupedByStage[stage]?.find((tsk) => tsk.id === taskId) || null;
+	}, [stage, taskId, tasksGroupedByStage]);
+
+	useEffect(() => {
+		if (typeof getFirstObjectKey(tasksGroupedByStage) === "undefined") {
+			getTasks(project);
+		}
+	}, [getTasks, project, tasksGroupedByStage]);
 	return (
 		<Container>
-			<TaskName>
-				<b>Tarea:</b> {task.name}
-			</TaskName>
-			<TaskDescription
-				initialValue={task.description}
-				controls={false}
-				editor={false}
-			/>
+			{taskData === null && <LoadingSpinner size="small" />}
+			{taskData !== null && (
+				<>
+					<TaskName>
+						<b>Tarea:</b> {taskData.name}
+					</TaskName>
+					<TaskDescription
+						initialValue={taskData.description}
+						controls={false}
+						editor={false}
+					/>
+				</>
+			)}
 		</Container>
 	);
 };
@@ -29,6 +45,8 @@ const Container = styled.div`
 const TaskName = styled.h2``;
 
 interface TaskDetailsProps {
-	task: ITask;
+	stage: number;
+	project: number;
+	taskId: number;
 }
 export default TaskDetails;
