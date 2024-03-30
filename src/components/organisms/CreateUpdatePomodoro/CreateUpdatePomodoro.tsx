@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 const CreateUpdatePomodoro: FC<CreateUpdatePomodoroProps> = ({ taskId }) => {
 	const { addPomodoro } = useContext(PomodorosCtx);
-	const { inputsData, onChange, inputsErrors } = useInputs(
+	const { inputsData, onChange, inputsErrors, restartInputs } = useInputs(
 		{
 			title: "",
 			duration_hrs: "0",
@@ -58,6 +58,7 @@ const CreateUpdatePomodoro: FC<CreateUpdatePomodoroProps> = ({ taskId }) => {
 			pomodoro.task_id = taskId;
 			const pomodoroCreated = await pomodoro.addPomodoro();
 			addPomodoro(taskId, pomodoroCreated);
+			restartInputs("all");
 		} catch (error) {
 			throw error;
 		}
