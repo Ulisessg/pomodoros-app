@@ -1,4 +1,4 @@
-import { DragEventData } from "@/components/molecules/Task";
+import { DragEventData } from "@/components/organisms/Task";
 import { ITask } from "@/models/task/Task";
 import TaskFrontend from "@/models/task/TaskFrontend";
 import { FC, ReactNode, createContext, useState } from "react";

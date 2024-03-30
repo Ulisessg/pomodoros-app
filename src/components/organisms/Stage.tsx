@@ -2,9 +2,9 @@ import { TaskCtx } from "@/context/TaskCtx";
 import { theme } from "d-system";
 import { DragEvent, FC, Fragment, useContext, useMemo } from "react";
 import styled from "styled-components";
-import Task, { DragEventData } from "../molecules/Task";
+import Task, { DragEventData } from "./Task";
 
-const Stage: FC<StageProps> = ({ title, stageId }) => {
+const Stage: FC<StageProps> = ({ title, stageId, projectId }) => {
 	const { tasks: tasksGroupedByStage, moveTaskToStage } = useContext(TaskCtx);
 	const tasks = useMemo(() => {
 		return tasksGroupedByStage[stageId];
@@ -40,7 +40,7 @@ const Stage: FC<StageProps> = ({ title, stageId }) => {
 					tasks.map((task, index) => {
 						return (
 							<Fragment key={`${stageId}${task.id}`}>
-								<Task task={task} taskIndex={index} taskStageId={stageId} />
+								<Task task={task} taskIndex={index} projectId={projectId} />
 							</Fragment>
 						);
 					})}
@@ -72,5 +72,6 @@ interface StageProps {
 	title: string;
 	color: string;
 	stageId: number;
+	projectId: number;
 }
 export default Stage;

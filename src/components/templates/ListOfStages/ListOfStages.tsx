@@ -52,6 +52,7 @@ const ListOfStages: FC = () => {
 								title={stage.name}
 								color={stage.color}
 								stageId={stage.id}
+								projectId={projectId}
 							/>
 						</Fragment>
 					);

@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { DragEvent, FC } from "react";
 import styled from "styled-components";
 
-const Task: FC<TaskProps> = ({ task, taskIndex }) => {
+const Task: FC<TaskProps> = ({ task, taskIndex, projectId }) => {
 	const handleOnDragStart = (e: DragEvent<HTMLAnchorElement>) => {
 		const format = "text/plain";
 		e.dataTransfer.clearData();
@@ -19,7 +19,7 @@ const Task: FC<TaskProps> = ({ task, taskIndex }) => {
 	return (
 		<>
 			<TaskContainer
-				href={"#"}
+				href={`/task?project=${projectId}&stage=${task.stage_id}&task=${task.id}`}
 				draggable
 				onDragStart={handleOnDragStart}
 				data-task-stage-id={task.stage_id}
@@ -40,7 +40,7 @@ const TaskContainer = styled(Link)`
 interface TaskProps {
 	task: ITask;
 	taskIndex: number;
-	taskStageId: number;
+	projectId: number;
 }
 
 export default Task;
