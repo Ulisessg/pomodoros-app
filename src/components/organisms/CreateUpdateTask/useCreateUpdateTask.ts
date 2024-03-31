@@ -9,7 +9,6 @@ export default function useCreateUpdateTask() {
 	const UseInputs = useInputs(
 		{
 			task: "",
-			description: "",
 			stage: DefaultSelectValue,
 		},
 		true
@@ -19,9 +18,12 @@ export default function useCreateUpdateTask() {
 		e.preventDefault();
 		if (!UseInputs.checkFormValidity()) return;
 		try {
+			const description = document.querySelector(
+				'textarea[name="description"]'
+			)?.textContent;
 			const TaskFront = new TaskFrontend();
 			TaskFront.name = UseInputs.inputsData.task;
-			TaskFront.description = UseInputs.inputsData.description;
+			TaskFront.description = description as string;
 			TaskFront.stage_id = Number(UseInputs.inputsData.stage);
 			const taskCreated = await TaskFront.addTask();
 			addTask(Number(UseInputs.inputsData.stage), taskCreated);

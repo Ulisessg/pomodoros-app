@@ -7,6 +7,7 @@ import { Button, Details, Form, Input, Select } from "d-system";
 import React, { useContext, useMemo } from "react";
 import styled from "styled-components";
 import useCreateUpdateTask from "./useCreateUpdateTask";
+import TaskDescription from "@/components/molecules/TaskDescription";
 
 const CreateUpdateTask = () => {
 	const projectId = useGetProjectId();
@@ -30,13 +31,7 @@ const CreateUpdateTask = () => {
 						minLength={3}
 						inputInvalid={inputsErrors.task}
 					/>
-					<Input
-						label="Descripcion"
-						name="description"
-						acceptanceCriteria="(opcional)"
-						value={inputsData.description}
-						onChange={onChange}
-					/>
+					<TaskDescription editor controls={false} />
 
 					<Select
 						name="stage"
