@@ -1,9 +1,13 @@
+"use client";
 import { IPomodoro } from "@/models/pomodoro/Pomodoro";
 import convertSecondsInTime from "@/utils/convertSecondsInTime";
 import convertTimeInSeconds from "@/utils/convertTimeInSeconds";
 import { Button, theme, useInputs } from "d-system";
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
+import { Howl } from "howler";
+
+const sound = new Audio(process.env.NEXT_PUBLIC_NOTIFICATION_AUDIO as string);
 
 const Pomodoro: FC<PomodoroProps> = ({ duration, title, index }) => {
 	const [pomodoroElapsedSeconds, setPomodoroElapsedSeconds] =
@@ -15,6 +19,28 @@ const Pomodoro: FC<PomodoroProps> = ({ duration, title, index }) => {
 		},
 		false
 	);
+
+	const requestNotificationPermission = async () => {
+		const permission = await Notification.requestPermission();
+		if (permission === "denied") {
+			alert(
+				"Activa las notificaciones para ser avisado cuando un pomodoro termina!"
+			);
+		}
+	};
+
+	const handleStartPomodoro = async () => {
+		if (!startPomodoro) {
+			await requestNotificationPermission();
+		}
+		setStartPomodoro((prev) => !prev);
+	};
+
+	const showNotification = async () => {
+		sound.volume = 1;
+		sound.play();
+		new Notification("Pomodoro terminado!");
+	};
 
 	useEffect(() => {
 		let interval: any;
@@ -30,6 +56,7 @@ const Pomodoro: FC<PomodoroProps> = ({ duration, title, index }) => {
 						convertSecondsInTime(timerDurationInSeconds - updatedSeconds)
 					);
 				} else {
+					showNotification();
 					clearInterval(interval);
 					restartInputs("all");
 					setStartPomodoro(false);
@@ -66,7 +93,7 @@ const Pomodoro: FC<PomodoroProps> = ({ duration, title, index }) => {
 				colorMessage="continue"
 				size="small"
 				text={startPomodoro ? "⏸" : "▶"}
-				onClick={() => setStartPomodoro((prev) => !prev)}
+				onClick={handleStartPomodoro}
 			/>
 		</Container>
 	);
