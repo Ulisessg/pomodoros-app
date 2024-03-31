@@ -21,9 +21,8 @@ const TaskDetails: FC<TaskDetailsProps> = ({ project, stage, taskId }) => {
 			{taskData === null && <LoadingSpinner size="small" />}
 			{taskData !== null && (
 				<>
-					<TaskName>
-						<b>Tarea:</b> {taskData.name}
-					</TaskName>
+					<TaskName>Tarea: {taskData.name}</TaskName>
+					<Description>Descripción:</Description>
 					<TaskDescription
 						initialValue={taskData.description}
 						controls={false}
@@ -42,7 +41,13 @@ const Container = styled.div`
 	gap: ${theme.spacing * 3}px;
 `;
 
-const TaskName = styled.h2``;
+const TaskName = styled.h2`
+	font-size: ${theme.spacing * 4}px;
+`;
+
+const Description = styled.p`
+	font-size: ${theme.spacing * 3}px;
+`;
 
 interface TaskDetailsProps {
 	stage: number;
