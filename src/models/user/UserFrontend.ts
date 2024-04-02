@@ -1,10 +1,10 @@
-import User from "./User";
+import User, { GetUser, IUser } from "./User";
 
 export default class UserFrontend extends User {
-	getUser(): Promise<string> {
+	addUser(): Promise<IUser> {
 		throw new Error("Method not implemented.");
 	}
-	override async addUser(): Promise<void> {
-		throw new Error("Implement Add user frontend");
+	getUser(): Promise<GetUser> {
+		throw new Error("Method not implemented.");
 	}
 }

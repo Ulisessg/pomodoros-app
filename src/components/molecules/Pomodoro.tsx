@@ -5,9 +5,6 @@ import convertTimeInSeconds from "@/utils/convertTimeInSeconds";
 import { Button, theme, useInputs } from "d-system";
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Howl } from "howler";
-
-const sound = new Audio(process.env.NEXT_PUBLIC_NOTIFICATION_AUDIO as string);
 
 const Pomodoro: FC<PomodoroProps> = ({ duration, title, index }) => {
 	const [pomodoroElapsedSeconds, setPomodoroElapsedSeconds] =
@@ -37,8 +34,12 @@ const Pomodoro: FC<PomodoroProps> = ({ duration, title, index }) => {
 	};
 
 	const showNotification = async () => {
-		sound.volume = 1;
-		sound.play();
+		const notificationAudio = new Audio(
+			process.env.NEXT_PUBLIC_NOTIFICATION_AUDIO as string
+		);
+
+		notificationAudio.volume = 1;
+		notificationAudio.play();
 		new Notification("Pomodoro terminado!");
 	};
 

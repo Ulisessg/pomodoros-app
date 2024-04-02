@@ -2,6 +2,8 @@
 import useGetTaskDataFromUrl from "@/hooks/useGetTaskDataFromUrl";
 import TaskDetails from "@/components/templates/TaskDetails";
 import ListPomodoros from "@/components/templates/ListPomodoros";
+import { FC, Suspense } from "react";
+import { LoadingSpinner } from "d-system";
 
 const TaskDetailPage = () => {
 	const { stage, task, project } = useGetTaskDataFromUrl();
@@ -14,4 +16,10 @@ const TaskDetailPage = () => {
 	);
 };
 
-export default TaskDetailPage;
+const Wrapper: FC = () => (
+	<Suspense fallback={<LoadingSpinner size="small" />}>
+		<TaskDetailPage />
+	</Suspense>
+);
+
+export default Wrapper;

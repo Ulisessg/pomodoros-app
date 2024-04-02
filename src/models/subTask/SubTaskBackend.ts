@@ -1,16 +1,16 @@
-import Task, { ITask } from "../task/Task";
+import SubTask, { ISubTask } from "./SubTask";
 
-export default class SubTaskBackend extends Task {
-	public addTask(): Promise<ITask> {
+export default class SubTaskBackend extends SubTask {
+	public addSubTask(): Promise<ISubTask> {
 		throw new Error("Method not implemented.");
 	}
-	public deleteTask(): Promise<ITask> {
+	public deleteSubTask(): Promise<ISubTask> {
 		throw new Error("Method not implemented.");
 	}
-	public updateTask(): Promise<ITask> {
+	public updateSubTask(): Promise<ISubTask> {
 		throw new Error("Method not implemented.");
 	}
-	public getTasks(): Promise<ITask[]> {
+	public getSubTasks(): Promise<ISubTask[]> {
 		throw new Error("Method not implemented.");
 	}
 }

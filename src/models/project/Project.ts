@@ -1,5 +1,4 @@
 import { Tables } from "@/Types";
-import { CreateProjectResponse } from "@/app/api/projects/POST";
 import { idValidations, nameValidations } from "@/utils/tableValidations";
 
 const table: Tables = "projects";
@@ -85,8 +84,6 @@ export default abstract class Project implements IProject {
 			extraMessage: "user_id",
 		});
 	}
-
-	public abstract addProject(): Promise<CreateProjectResponse>;
 	public abstract updateProject(): Promise<any>;
 	public abstract deleteProject(): Promise<any>;
 	public abstract getProjects(): Promise<IProject[]>;
