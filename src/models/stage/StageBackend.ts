@@ -1,4 +1,4 @@
-import mariaDbPool from "@/utils/mariaDbPool";
+import mariaDbPool from "@/databaseConnectors/mariaDbPool";
 import Stage, { AddStagesParam, IStage } from "./Stage";
 
 export default class StageBackend extends Stage {

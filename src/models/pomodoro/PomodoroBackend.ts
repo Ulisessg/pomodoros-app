@@ -1,4 +1,4 @@
-import mariaDbPool from "@/utils/mariaDbPool";
+import mariaDbPool from "@/databaseConnectors/mariaDbPool";
 import Pomodoro, { IPomodoro } from "./Pomodoro";
 
 export default class PomodoroBackend extends Pomodoro {

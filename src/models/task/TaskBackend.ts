@@ -1,4 +1,4 @@
-import mariaDbPool from "@/utils/mariaDbPool";
+import mariaDbPool from "@/databaseConnectors/mariaDbPool";
 import Task, { ITask } from "./Task";
 import { TTask } from "@/context/TaskCtx/TaskCtx";
 

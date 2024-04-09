@@ -1,5 +1,6 @@
 import { ProjectsCtx } from "@/context/ProjectsCtx";
 import { StagesCtx } from "@/context/StagesCtx";
+import { UserCtx } from "@/context/UserCtx";
 import ProjectFrontend from "@/models/project/ProjectFrontend";
 import { UseInputsReturn, useInputs } from "d-system";
 import { MouseEvent, useContext, useMemo } from "react";
@@ -10,7 +11,9 @@ export default function useCreateUpdateProject({
 }: UseCreateUpdateProjectArgs): UseCreateUpdateProjectReturn {
 	const { addStages } = useContext(StagesCtx);
 
-	const { userId, addProject } = useContext(ProjectsCtx);
+	const { addProject } = useContext(ProjectsCtx);
+	const { userId } = useContext(UserCtx);
+
 	const actionMessage = useMemo(() => {
 		if (typeof projectName === "string") {
 			return "Actualizar Proyecto";

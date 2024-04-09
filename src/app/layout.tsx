@@ -1,6 +1,7 @@
 "use client";
 import { GlobalStyles } from "d-system";
-import { SessionProvider } from "./Providers";
+import { SuperTokensProvider } from "@/providers/supertokensProvider";
+import { UserCtxProvider } from "@/context/UserCtx";
 import { ProjectsCtxProvider } from "@/context/ProjectsCtx";
 import { StagesCtxProvider } from "@/context/StagesCtx";
 import { TaskCtxProvider } from "@/context/TaskCtx";
@@ -17,23 +18,25 @@ export default function RootLayout({
 			<head>
 				<title>Pomodoros app</title>
 			</head>
-			<SessionProvider>
-				<ProjectsCtxProvider>
-					<StagesCtxProvider>
-						<TaskCtxProvider>
-							<PomodorosCtxProvider>
-								<body>
-									<div id="__next">
-										<GlobalStyles header={<HeaderComponent />} footer={false}>
-											{children}
-										</GlobalStyles>
-									</div>
-								</body>
-							</PomodorosCtxProvider>
-						</TaskCtxProvider>
-					</StagesCtxProvider>
-				</ProjectsCtxProvider>
-			</SessionProvider>
+			<body>
+				<div id="__next">
+					<SuperTokensProvider>
+						<UserCtxProvider>
+							<ProjectsCtxProvider>
+								<StagesCtxProvider>
+									<TaskCtxProvider>
+										<PomodorosCtxProvider>
+											<GlobalStyles header={<HeaderComponent />} footer={false}>
+												{children}
+											</GlobalStyles>
+										</PomodorosCtxProvider>
+									</TaskCtxProvider>
+								</StagesCtxProvider>
+							</ProjectsCtxProvider>
+						</UserCtxProvider>
+					</SuperTokensProvider>
+				</div>
+			</body>
 		</html>
 	);
 }

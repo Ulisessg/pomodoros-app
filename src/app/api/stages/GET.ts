@@ -1,6 +1,5 @@
 import { IStage } from "@/models/stage/Stage";
 import StageBackend from "@/models/stage/StageBackend";
-import { getSession } from "@auth0/nextjs-auth0";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function name(req: NextRequest) {

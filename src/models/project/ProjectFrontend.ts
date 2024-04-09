@@ -11,7 +11,7 @@ export default class ProjectFrontend extends Project {
 		super();
 	}
 	async addProject(): Promise<CreateProjectResponse> {
-		this.validateName();
+		this.validateProjectName();
 
 		const addProjectResult = await axios.post<CreateProjectResponse>(
 			"/api/projects",
@@ -37,7 +37,6 @@ export default class ProjectFrontend extends Project {
 			if (projectsResponse.error) {
 				throw new Error("Error getting projects");
 			}
-			this.user_id = projectsResponse.userId;
 			return projectsResponse.projects;
 		} catch (error) {
 			throw error;

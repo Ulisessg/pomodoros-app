@@ -1,37 +1,41 @@
 import { Tables } from "@/Types";
-import { idValidations, nameValidations } from "@/utils/tableValidations";
+import TableValidations from "../TableValidations";
 
 const table: Tables = "users";
 
-export default abstract class User implements IUser {
-	private _id: number = NaN;
-	private _name: string = "";
+export default abstract class User extends TableValidations implements IUser {
+	private _user_name: string = "";
+	// From supertokens database
+	private _user_id: string = "";
 
-	public get id(): number {
-		return this._id;
-	}
-	public set id(value: number) {
-		idValidations({
-			id: value,
-			table,
-		});
-		this._id = value;
+	constructor() {
+		super(table);
 	}
 
-	public get name(): string {
-		return this._name;
+	public get user_id(): string {
+		return this._user_id;
 	}
-	public set name(value: string) {
+	public set user_id(value: string) {
+		this.validateUserId(value);
+		this._user_id = value;
+	}
+
+	public get user_name(): string {
+		return this._user_name;
+	}
+	public set user_name(value: string) {
 		this.validateUserName(value);
-		this._name = value;
+		this._user_name = value;
 	}
-	public validateUserName(newUsername?: string): void {
-		nameValidations({
-			maxNameSize: 30,
-			name: newUsername || this.name,
-			table,
-		});
+
+	public validateUserId(userId?: string) {
+		this.validateName(userId || this.user_id, 100, "user_id");
 	}
+
+	public validateUserName(userName?: string) {
+		this.validateName(userName || this.user_name, 30, "Username", 3);
+	}
+
 	abstract addUser(): Promise<IUser>;
 	abstract getUser(): Promise<GetUser>;
 }
@@ -39,6 +43,6 @@ export default abstract class User implements IUser {
 export type GetUser = IUser | undefined;
 
 export interface IUser {
-	id: number;
-	name: string;
+	user_name: string;
+	user_id: string;
 }

@@ -1,45 +1,67 @@
-import mariaDbPool from "@/utils/mariaDbPool";
-import User, { GetUser, IUser } from "./User";
+import mariaDbPool from "@/databaseConnectors/mariaDbPool";
+import User, { IUser } from "./User";
 import UserError from "./UserError";
+import usersDbConnector from "@/databaseConnectors/usersDbConnector";
 
 export default class UserBackend extends User {
 	constructor() {
 		super();
 	}
-	async getUser(): Promise<GetUser> {
-		this.validateUserName();
-		const connection = await mariaDbPool.getConnection();
+	// From users database
+	async getUser(): Promise<IUser> {
+		const connection = await usersDbConnector.getConnection();
 		try {
-			const user: [IUser] = await connection.query(
-				`SELECT
-		users.id,
-		users.username AS name
-		FROM users
-		WHERE users.username = ?`,
-				[this.name]
+			this.validateUserId();
+			const userFromDbUsers: [IUser] = await connection.query(
+				"SELECT user_name, user_id FROM users WHERE users.user_id = ?",
+				[this.user_id]
 			);
-			await connection.end();
-			return user[0];
+			return userFromDbUsers[0];
 		} catch (error) {
-			await connection.end();
 			throw error;
+		} finally {
+			await connection.end();
 		}
 	}
+
+	// Add user in pomodorosDb
 	async addUser(): Promise<IUser> {
-		this.validateUserName();
 		const connection = await mariaDbPool.getConnection();
 		try {
+			this.validateUserName();
+			this.validateUserId();
+
 			const user: [IUser] = await connection.query(
-				`INSERT INTO users (id, username) VALUES (?, ?) RETURNING id, username as name`,
-				[null, this.name]
+				`INSERT INTO users (id, user_name, user_id) VALUES (?, ?, ?) RETURNING id, user_name, user_id`,
+				[null, this.user_name, this.user_id]
 			);
-			await connection.end();
+
 			return user[0];
 		} catch (error) {
-			await connection.end();
 			throw new UserError("Error creating user", {
 				cause: error,
 			});
+		} finally {
+			await connection.end();
+		}
+	}
+	public async validateUserIsRegisteredInPomodorosDb(): Promise<boolean> {
+		this.validateUserId();
+		const connection = await mariaDbPool.getConnection();
+		try {
+			const user: [IUser] = await connection.query(
+				`SELECT * FROM users WHERE users.user_id = ?`,
+				[this.user_id]
+			);
+
+			if (typeof user[0] !== "undefined") {
+				return true;
+			}
+			return false;
+		} catch (error) {
+			throw error;
+		} finally {
+			await connection.end();
 		}
 	}
 }

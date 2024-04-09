@@ -8,7 +8,6 @@ export { GET, POST };
 export interface GetProjectsResponse {
 	error: boolean;
 	projects: IProject[];
-	userId: number;
 }
 
 export interface CreateProjectResponse {

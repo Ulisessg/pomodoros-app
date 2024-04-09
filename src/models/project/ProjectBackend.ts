@@ -1,4 +1,4 @@
-import mariaDbPool from "@/utils/mariaDbPool";
+import mariaDbPool from "@/databaseConnectors/mariaDbPool";
 import Project, { IProject } from "./Project";
 
 const ImplementError = new Error("Implement in backend");
@@ -11,7 +11,7 @@ export default class ProjectBackend extends Project {
 		const connection = await mariaDbPool.getConnection();
 		try {
 			this.validateUserId();
-			this.validateName();
+			this.validateProjectName();
 			const projectWithSameName = await connection.query(
 				"SELECT * FROM projects WHERE projects.name = ? AND projects.user_id = ?",
 				[this.name, this.user_id]
@@ -49,7 +49,7 @@ export default class ProjectBackend extends Project {
 		projects.name,
 		projects.description,
 		projects.user_id 
-		FROM projects INNER JOIN users ON user_id = users.id WHERE users.id = ?;`,
+		FROM projects INNER JOIN users ON projects.user_id = users.user_id WHERE users.user_id = ?`,
 				[this.user_id]
 			);
 			return projects;
