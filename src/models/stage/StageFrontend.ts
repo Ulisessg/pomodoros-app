@@ -1,6 +1,6 @@
-import axios from "axios";
 import Stage, { IStage } from "./Stage";
 import { GetStagesResponse } from "@/app/api/stages/GET";
+import axiosInstance from "@/utils/axiosInstance";
 
 export default class StageFrontend extends Stage {
 	constructor() {
@@ -20,11 +20,14 @@ export default class StageFrontend extends Stage {
 		throw new Error("Method not implemented.");
 	}
 	public async getStages(): Promise<IStage[]> {
-		const stagesData = await axios.get<GetStagesResponse>("/api/stages", {
-			params: {
-				projectId: this.project_id,
-			},
-		});
+		const stagesData = await axiosInstance.get<GetStagesResponse>(
+			"/api/stages",
+			{
+				params: {
+					projectId: this.project_id,
+				},
+			}
+		);
 		return stagesData.data.stages;
 	}
 }

@@ -1,15 +1,15 @@
-import axios from "axios";
 import Pomodoro, { IPomodoro } from "./Pomodoro";
 import { GetPomodorosResponse } from "@/app/api/pomodoros/GET";
 import {
 	CreatePomodoroBody,
 	CreatePomodoroResponse,
 } from "@/app/api/pomodoros/POST";
+import axiosInstance from "@/utils/axiosInstance";
 
 export default class PomodoroFrontend extends Pomodoro {
 	public async addPomodoro(): Promise<IPomodoro> {
-		const pomodoroCreated = await axios.post<CreatePomodoroResponse>(
-			"/api/pomodoros",
+		const pomodoroCreated = await axiosInstance.post<CreatePomodoroResponse>(
+			"/pomodoros",
 			{
 				duration: this.duration,
 				title: this.title,
@@ -26,11 +26,14 @@ export default class PomodoroFrontend extends Pomodoro {
 		throw new Error("Method not implemented.");
 	}
 	public async getPomodoros(): Promise<IPomodoro[]> {
-		const pomodoros = await axios.get<GetPomodorosResponse>("/api/pomodoros", {
-			params: {
-				taskId: this.task_id,
-			},
-		});
+		const pomodoros = await axiosInstance.get<GetPomodorosResponse>(
+			"/api/pomodoros",
+			{
+				params: {
+					taskId: this.task_id,
+				},
+			}
+		);
 		return pomodoros.data.pomodoros;
 	}
 }

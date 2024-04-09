@@ -1,8 +1,8 @@
 "use client";
 import { GetProjectsResponse } from "@/app/api/projects/route";
 import Project, { IProject } from "./Project";
-import axios from "axios";
 import { CreateProjectResponse } from "@/app/api/projects/POST";
+import axiosInstance from "@/utils/axiosInstance";
 
 const ImplementError = new Error("Implement in frontend");
 
@@ -13,7 +13,7 @@ export default class ProjectFrontend extends Project {
 	async addProject(): Promise<CreateProjectResponse> {
 		this.validateProjectName();
 
-		const addProjectResult = await axios.post<CreateProjectResponse>(
+		const addProjectResult = await axiosInstance.post<CreateProjectResponse>(
 			"/api/projects",
 			{
 				name: this.name,
@@ -32,7 +32,7 @@ export default class ProjectFrontend extends Project {
 	}
 	async getProjects(): Promise<IProject[]> {
 		try {
-			const req = await axios.get<GetProjectsResponse>("/api/projects");
+			const req = await axiosInstance.get<GetProjectsResponse>("/api/projects");
 			const projectsResponse = req.data;
 			if (projectsResponse.error) {
 				throw new Error("Error getting projects");
