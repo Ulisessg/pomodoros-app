@@ -14,7 +14,7 @@ export default class ProjectFrontend extends Project {
 		this.validateProjectName();
 
 		const addProjectResult = await axiosInstance.post<CreateProjectResponse>(
-			"/api/projects",
+			"/projects",
 			{
 				name: this.name,
 				description: this.description,
@@ -32,7 +32,7 @@ export default class ProjectFrontend extends Project {
 	}
 	async getProjects(): Promise<IProject[]> {
 		try {
-			const req = await axiosInstance.get<GetProjectsResponse>("/api/projects");
+			const req = await axiosInstance.get<GetProjectsResponse>("/projects");
 			const projectsResponse = req.data;
 			if (projectsResponse.error) {
 				throw new Error("Error getting projects");

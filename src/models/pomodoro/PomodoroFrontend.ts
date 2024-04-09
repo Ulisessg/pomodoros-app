@@ -27,7 +27,7 @@ export default class PomodoroFrontend extends Pomodoro {
 	}
 	public async getPomodoros(): Promise<IPomodoro[]> {
 		const pomodoros = await axiosInstance.get<GetPomodorosResponse>(
-			"/api/pomodoros",
+			"/pomodoros",
 			{
 				params: {
 					taskId: this.task_id,

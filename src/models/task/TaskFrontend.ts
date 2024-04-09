@@ -10,14 +10,11 @@ export default class TaskFrontend extends Task {
 		super();
 	}
 	public async addTask(): Promise<ITask> {
-		const taskCreated = await axiosInstance.post<CreateTaskResponse>(
-			"/api/tasks",
-			{
-				name: this.name,
-				description: this.description,
-				stage_id: this.stage_id,
-			}
-		);
+		const taskCreated = await axiosInstance.post<CreateTaskResponse>("/tasks", {
+			name: this.name,
+			description: this.description,
+			stage_id: this.stage_id,
+		});
 		return taskCreated.data.task;
 	}
 	public deleteTask(): Promise<ITask> {
@@ -33,15 +30,12 @@ export default class TaskFrontend extends Task {
 			id: this.id,
 			stage_id: this.stage_id,
 		};
-		await axiosInstance.patch("/api/tasks", updateBody);
+		await axiosInstance.patch("/tasks", updateBody);
 	}
 	public async getTasks(projectId: number): Promise<TTask> {
-		const tasksResponse = await axiosInstance.get<GetTaskResponse>(
-			"/api/tasks",
-			{
-				params: { projectId },
-			}
-		);
+		const tasksResponse = await axiosInstance.get<GetTaskResponse>("/tasks", {
+			params: { projectId },
+		});
 		return tasksResponse.data.tasks;
 	}
 }

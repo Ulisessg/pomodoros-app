@@ -20,14 +20,11 @@ export default class StageFrontend extends Stage {
 		throw new Error("Method not implemented.");
 	}
 	public async getStages(): Promise<IStage[]> {
-		const stagesData = await axiosInstance.get<GetStagesResponse>(
-			"/api/stages",
-			{
-				params: {
-					projectId: this.project_id,
-				},
-			}
-		);
+		const stagesData = await axiosInstance.get<GetStagesResponse>("/stages", {
+			params: {
+				projectId: this.project_id,
+			},
+		});
 		return stagesData.data.stages;
 	}
 }
