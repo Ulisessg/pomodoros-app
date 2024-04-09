@@ -3,13 +3,6 @@ import StageBackend from "@/models/stage/StageBackend";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function name(req: NextRequest) {
-	const res = new NextResponse();
-	const session = await getSession(req, res);
-
-	if (!session?.user) {
-		return NextResponse.redirect("/api/auth");
-	}
-
 	try {
 		const projectId = req.nextUrl.searchParams.get("projectId");
 		if (!projectId) {
