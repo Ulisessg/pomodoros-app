@@ -28,12 +28,11 @@ export default class UserBackend extends User {
 	async addUser(): Promise<IUser> {
 		const connection = await mariaDbPool.getConnection();
 		try {
-			this.validateUserName();
 			this.validateUserId();
 
 			const user: [IUser] = await connection.query(
-				`INSERT INTO users (id, user_name, user_id) VALUES (?, ?, ?) RETURNING id, user_name, user_id`,
-				[null, this.user_name, this.user_id]
+				`INSERT INTO users (id, user_id) VALUES (?, ?) RETURNING id, user_id`,
+				[null, this.user_id]
 			);
 
 			return user[0];

@@ -19,6 +19,8 @@ export default async function GET(request: NextRequest) {
 			await User.validateUserIsRegisteredInPomodorosDb();
 
 		if (!userIsRegisteredInPomodorosDb) {
+			const userData = await User.getUser();
+			User.user_name = userData.user_name;
 			// The user is not registered in database so there are no projects associated with them
 			await User.addUser();
 
