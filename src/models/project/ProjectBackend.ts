@@ -56,6 +56,8 @@ export default class ProjectBackend extends Project {
 		} catch (error) {
 			await connection.end();
 			throw error;
+		} finally {
+			await connection.end();
 		}
 	}
 }
