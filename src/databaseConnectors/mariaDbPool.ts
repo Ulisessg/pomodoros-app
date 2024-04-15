@@ -5,6 +5,7 @@ const mariaDbPool = mariadb.createPool({
 	user: process.env.DATA_DB_USER as string,
 	password: process.env.DATA_DB_PASSWORD as string,
 	database: process.env.DATA_DB_DATABASE as string,
+	port: Number(process.env.DATA_DB_PORT),
 	connectionLimit: 5,
 });
 
