@@ -51,6 +51,7 @@ const Stage: FC<StageProps> = ({ title, stageId, projectId }) => {
 };
 
 const StageContainer = styled.div`
+	overflow: scroll;
 	border: 1px solid ${theme.colors.dark1};
 	border-radius: ${theme.spacing}px;
 	width: ${theme.spacing * 40}px;
