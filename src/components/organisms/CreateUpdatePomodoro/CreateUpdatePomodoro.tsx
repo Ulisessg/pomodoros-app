@@ -66,7 +66,7 @@ const CreateUpdatePomodoro: FC<CreateUpdatePomodoroProps> = ({ taskId }) => {
 	return (
 		<Form formTitle="Crear pomodoro" onSubmit={(e) => e.preventDefault()}>
 			<Input
-				label="Titulo del pomodoroo"
+				label="Titulo del pomodoro"
 				name="title"
 				value={inputsData.title}
 				inputInvalid={inputsErrors.title}
