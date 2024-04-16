@@ -20,14 +20,15 @@ export default function useCreateUpdateTask() {
 		try {
 			const description = document.querySelector(
 				'textarea[name="description"]'
-			)?.textContent;
+			) as HTMLTextAreaElement;
 			const TaskFront = new TaskFrontend();
 			TaskFront.name = UseInputs.inputsData.task;
-			TaskFront.description = description as string;
+			TaskFront.description = description.textContent as string;
 			TaskFront.stage_id = Number(UseInputs.inputsData.stage);
 			const taskCreated = await TaskFront.addTask();
 			addTask(Number(UseInputs.inputsData.stage), taskCreated);
 			UseInputs.restartInputs("all");
+			description.value = "";
 		} catch {}
 	};
 
