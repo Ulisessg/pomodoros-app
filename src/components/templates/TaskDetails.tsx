@@ -27,6 +27,7 @@ const TaskDetails: FC<TaskDetailsProps> = ({ project, stage, taskId }) => {
 						initialValue={taskData.description}
 						controls={false}
 						editor={false}
+						resetValue={false}
 					/>
 				</>
 			)}
