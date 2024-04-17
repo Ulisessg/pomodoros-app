@@ -17,6 +17,7 @@ export default function RootLayout({
 		<html lang="es">
 			<head>
 				<title>Pomodoros app</title>
+				<link rel="icon" type="image/png" href="/Tomato.png" />
 			</head>
 			<body>
 				<div id="__next">
