@@ -1,6 +1,6 @@
 {
 	"name": "pomodoros",
-	"version": "0.1.5",
+	"version": "0.1.6",
 	"private": true,
 	"scripts": {
 		"dev": "next dev -p 3002",
@@ -18,13 +18,13 @@
 		"react-dom": "18",
 		"react-markdown": "9.0.1",
 		"styled-components": "6.1.8",
-		"supertokens-auth-react": "0.39.1",
-		"supertokens-node": "17.0.3",
+		"supertokens-auth-react": "0.40.0",
+		"supertokens-node": "17.0.4",
 		"supertokens-web-js": "0.10.1"
 	},
 	"devDependencies": {
 		"@types/node": "20.12.7",
-		"@types/react": "18.2.78",
+		"@types/react": "18.2.79",
 		"@types/react-dom": "18.2.25",
 		"eslint": "8.57.0",
 		"eslint-config-next": "14.2.1",
