@@ -7,6 +7,7 @@ import { StagesCtxProvider } from "@/context/StagesCtx";
 import { TaskCtxProvider } from "@/context/TaskCtx";
 import { PomodorosCtxProvider } from "@/context/PomodorosCtx";
 import HeaderComponent from "@/components/atoms/Header";
+import { StaticImagesPath } from "@/constants";
 
 export default function RootLayout({
 	children,
@@ -17,7 +18,11 @@ export default function RootLayout({
 		<html lang="es">
 			<head>
 				<title>Pomodoros app</title>
-				<link rel="icon" type="image/png" href="/Tomato.png" />
+				<link
+					rel="icon"
+					type="image/png"
+					href={`${StaticImagesPath}Tomato.png`}
+				/>
 			</head>
 			<body>
 				<div id="__next">
