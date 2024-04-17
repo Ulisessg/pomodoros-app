@@ -15,8 +15,14 @@ const CreateUpdateTask = () => {
 	const stagesData: IStage[] = useMemo(() => {
 		return stages[Number(projectId)];
 	}, [projectId, stages]);
-	const { inputsData, inputsErrors, onChange, formIsValid, handleCreateTask } =
-		useCreateUpdateTask();
+	const {
+		inputsData,
+		inputsErrors,
+		onChange,
+		formIsValid,
+		handleCreateTask,
+		resetTaskDescription,
+	} = useCreateUpdateTask();
 
 	return (
 		<CreateUpdateTaskContainer>
@@ -31,7 +37,11 @@ const CreateUpdateTask = () => {
 						minLength={3}
 						inputInvalid={inputsErrors.task}
 					/>
-					<TaskDescription editor controls={false} />
+					<TaskDescription
+						editor
+						controls={false}
+						resetValue={resetTaskDescription}
+					/>
 
 					<Select
 						name="stage"

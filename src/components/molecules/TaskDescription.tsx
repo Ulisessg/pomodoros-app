@@ -1,6 +1,6 @@
 "use client";
 import { theme, useInputs } from "d-system";
-import React, { FC, useId } from "react";
+import React, { FC, useEffect, useId } from "react";
 import styled from "styled-components";
 import Markdown from "react-markdown";
 
@@ -8,14 +8,22 @@ const TaskDescription: FC<TaskDescriptionProps> = ({
 	initialValue,
 	controls,
 	editor,
+	resetValue,
 }) => {
 	const editorId = useId();
-	const { inputsData, onChange } = useInputs(
+	const { inputsData, onChange, restartInputs } = useInputs(
 		{
 			description: initialValue || "",
 		},
 		false
 	);
+
+	useEffect(() => {
+		if (resetValue) {
+			restartInputs("all");
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [resetValue]);
 	return (
 		<Container controls={controls} editor={editor}>
 			{editor && (
@@ -92,6 +100,8 @@ interface TaskDescriptionProps {
 	// Show edit - update - cancel buttons
 	controls: boolean;
 	editor: boolean;
+	// Execute useInputs.restartInputs('all')
+	resetValue: boolean;
 }
 
 export default TaskDescription;
