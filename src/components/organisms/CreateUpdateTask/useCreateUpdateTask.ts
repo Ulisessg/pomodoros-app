@@ -32,6 +32,11 @@ export default function useCreateUpdateTask() {
 			UseInputs.restartInputs("all");
 			description.value = "";
 			setResetTaskDescription(true);
+			// Set focus on input task name, ---- Make it only on create task ----
+			const inputName = document.querySelector(
+				'input[name="task"]'
+			) as HTMLInputElement;
+			inputName.focus();
 		} catch {}
 	};
 
