@@ -1,12 +1,16 @@
 "use client";
+import { PomodorosContainerCtx } from "@/context/PomodorosContainerCtx";
 import { IPomodoro } from "@/models/pomodoro/Pomodoro";
 import convertSecondsInTime from "@/utils/convertSecondsInTime";
 import convertTimeInSeconds from "@/utils/convertTimeInSeconds";
 import { Button, theme, useInputs } from "d-system";
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 
-const Pomodoro: FC<PomodoroProps> = ({ duration, title, index }) => {
+const Pomodoro: FC<PomodoroProps> = ({ duration, title, index, type }) => {
+	const { pushPomodoroEndNotification, pushRestEndNotification } = useContext(
+		PomodorosContainerCtx
+	);
 	const [pomodoroElapsedSeconds, setPomodoroElapsedSeconds] =
 		useState<number>(0);
 	const [startPomodoro, setStartPomodoro] = useState<boolean>(false);
@@ -33,14 +37,12 @@ const Pomodoro: FC<PomodoroProps> = ({ duration, title, index }) => {
 		setStartPomodoro((prev) => !prev);
 	};
 
-	const showNotification = async () => {
-		const notificationAudio = new Audio(
-			process.env.NEXT_PUBLIC_NOTIFICATION_AUDIO as string
-		);
-
-		notificationAudio.volume = 1;
-		notificationAudio.play();
-		new Notification("Pomodoro terminado!");
+	const showNotification = () => {
+		if (type === "pomodoro") {
+			pushPomodoroEndNotification(title);
+		} else {
+			pushRestEndNotification();
+		}
 	};
 
 	useEffect(() => {
@@ -132,6 +134,7 @@ const DurationTime = styled.p<{ pomodoroStart: boolean }>`
 interface PomodoroProps
 	extends Omit<IPomodoro, "rest_duration" | "id" | "task_id"> {
 	index: number;
+	type: "pomodoro" | "rest";
 }
 
 export default Pomodoro;
