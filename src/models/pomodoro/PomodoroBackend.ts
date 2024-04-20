@@ -1,7 +1,39 @@
 import mariaDbPool from "@/databaseConnectors/mariaDbPool";
-import Pomodoro, { IPomodoro } from "./Pomodoro";
+import Pomodoro, { IPomodoro, TPomodoroTypes } from "./Pomodoro";
 
 export default class PomodoroBackend extends Pomodoro {
+	constructor() {
+		super();
+	}
+
+	public async updateStoppedAt(type: TPomodoroTypes): Promise<void> {
+		const connection = await mariaDbPool.getConnection();
+
+		try {
+			this.validateId(this.id, "pomodoro id");
+			this.validateType(type);
+
+			let updateQueryString = "";
+			let stoppedAt;
+			if (type === "pomodoro") {
+				this.validateDuration(this.pomodoro_stopped_at);
+				stoppedAt = this.pomodoro_stopped_at;
+				updateQueryString =
+					"UPDATE pomodoros SET pomodoro_stopped_at = ? WHERE id = ?";
+			} else if (type === "rest") {
+				this.validateDuration(this.rest_stopped_at);
+				stoppedAt = this.rest_stopped_at;
+				updateQueryString =
+					"UPDATE pomodoros SET rest_stopped_at = ? WHERE id = ?";
+			}
+
+			await connection.query(updateQueryString, [stoppedAt, this.id]);
+		} catch (error) {
+			throw error;
+		} finally {
+			await connection.end();
+		}
+	}
 	public async addPomodoro(): Promise<IPomodoro> {
 		const connection = await mariaDbPool.getConnection();
 		try {
