@@ -1,10 +1,11 @@
 import { Tables } from "@/Types";
 import TableValidations from "../TableValidations";
 import { TimeRegex } from "@/utils/regex";
+import { ValidationError, ValidationTypeError } from "@/utils/tableValidations";
 
 const table: Tables = "pomodoros";
 
-export default abstract class task_idPomodoro
+export default abstract class Pomodoro
 	extends TableValidations
 	implements IPomodoro
 {
@@ -13,9 +14,27 @@ export default abstract class task_idPomodoro
 	private _duration: string = "";
 	private _rest_duration: string = "";
 	private _task_id: number = NaN;
+	private _pomodoro_stopped_at: string = "";
+
+	private _rest_stopped_at: string = "";
 
 	constructor() {
 		super(table);
+	}
+
+	public get pomodoro_stopped_at(): string {
+		return this._pomodoro_stopped_at;
+	}
+	public set pomodoro_stopped_at(value: string) {
+		this.validateDuration(value);
+		this._pomodoro_stopped_at = value;
+	}
+
+	public get rest_stopped_at(): string {
+		return this._rest_stopped_at;
+	}
+	public set rest_stopped_at(value: string) {
+		this._rest_stopped_at = value;
 	}
 
 	public get id(): number {
@@ -62,11 +81,21 @@ export default abstract class task_idPomodoro
 			throw new Error("Bad time format");
 		}
 	}
+	public validateType(type: TPomodoroTypes) {
+		if (typeof type !== "string") {
+			throw new ValidationTypeError("Invalid type, must be string type");
+		}
+		if (type !== "rest" && type !== "pomodoro") {
+			throw new ValidationError('Types allowed: "pomodoro" | "rest"');
+		}
+	}
 
 	public abstract addPomodoro(): Promise<IPomodoro>;
 	public abstract deletePomodoro(): Promise<IPomodoro>;
 	public abstract updatePomodoro(): Promise<IPomodoro>;
 	public abstract getPomodoros(): Promise<Array<IPomodoro>>;
+	// eslint-disable-next-line no-unused-vars
+	public abstract updateStoppedAt(type: TPomodoroTypes): Promise<void>;
 }
 
 export interface IPomodoro {
@@ -76,5 +105,11 @@ export interface IPomodoro {
 	duration: string;
 	// 00:00:00
 	rest_duration: string;
+	// 00:00:00
+	pomodoro_stopped_at: string;
+	// 00:00:00
+	rest_stopped_at: string;
 	task_id: number;
 }
+
+export type TPomodoroTypes = "pomodoro" | "rest";
