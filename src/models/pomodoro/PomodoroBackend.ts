@@ -41,7 +41,7 @@ export default class PomodoroBackend extends Pomodoro {
 				`INSERT INTO pomodoros 
 					(id, title, duration, rest_duration, task_id) 
 					VALUES (?,?,?,?,?) 
-				RETURNING id, title, duration, rest_duration, task_id`,
+				RETURNING id, title, duration, rest_duration, pomodoro_stopped_at, rest_stopped_at, task_id`,
 				[null, this.title, this.duration, this.rest_duration, this.task_id]
 			);
 

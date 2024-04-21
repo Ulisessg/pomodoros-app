@@ -31,10 +31,21 @@ export const PomodorosCtxProvider: FC<PomodorosCtxProviderProps> = ({
 	};
 
 	const addPomodoro: State["addPomodoro"] = (taskId, newPomodoro) => {
-		setPomodoros((prev) => ({
-			...prev,
-			[Number(taskId)]: [...prev[taskId], newPomodoro],
-		}));
+		setPomodoros((prev) => {
+			const firstKey = getFirstObjectKey(prev);
+			if (typeof firstKey === "undefined") {
+				return {
+					[Number(taskId)]: [newPomodoro],
+				};
+			} else {
+				const listOfPomodoros = [...prev[Number(taskId)]];
+				listOfPomodoros.push(newPomodoro);
+				return {
+					...prev,
+					[Number(taskId)]: [...listOfPomodoros],
+				};
+			}
+		});
 	};
 	const updatePomodoro: State["updatePomodoro"] = (
 		taskId,
