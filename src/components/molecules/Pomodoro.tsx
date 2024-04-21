@@ -17,23 +17,18 @@ const Pomodoro: FC<PomodoroProps> = ({
 	id,
 	stopped_at,
 }) => {
+	const timerDuration = stopped_at === "00:00:00" ? duration : stopped_at;
 	const { pushPomodoroEndNotification, pushRestEndNotification } = useContext(
 		PomodorosContainerCtx
 	);
-	const [pomodoroElapsedSeconds, setPomodoroElapsedSeconds] = useState<number>(
-		convertTimeInSeconds(stopped_at)
-	);
+	const [pomodoroElapsedSeconds, setPomodoroElapsedSeconds] =
+		// Pomodoro always start in 0 elapsed seconds
+		useState<number>(0);
 
 	const [startPomodoro, setStartPomodoro] = useState<boolean>(false);
 	const { inputsData, updateInput, restartInputs } = useInputs(
 		{
-			pomodoro:
-				stopped_at === "00:00:00"
-					? duration
-					: convertSecondsInTime(
-							// Rest duration minus time elapsed
-							convertTimeInSeconds(duration) - convertTimeInSeconds(stopped_at)
-					  ),
+			pomodoro: timerDuration,
 		},
 		false
 	);
@@ -90,12 +85,14 @@ const Pomodoro: FC<PomodoroProps> = ({
 	useEffect(() => {
 		let interval: any;
 		if (startPomodoro) {
-			const timerDurationInSeconds = convertTimeInSeconds(duration);
+			const timerDurationInSeconds = convertTimeInSeconds(timerDuration);
 
 			interval = setInterval(() => {
 				if (pomodoroElapsedSeconds < timerDurationInSeconds) {
 					const updatedSeconds = pomodoroElapsedSeconds + 1;
+
 					setPomodoroElapsedSeconds(updatedSeconds);
+
 					updateInput(
 						"pomodoro",
 						convertSecondsInTime(timerDurationInSeconds - updatedSeconds)
@@ -116,10 +113,12 @@ const Pomodoro: FC<PomodoroProps> = ({
 		return () => clearInterval(interval);
 	}, [
 		duration,
+		inputsData.pomodoro,
 		pomodoroElapsedSeconds,
 		restartInputs,
 		showNotification,
 		startPomodoro,
+		timerDuration,
 		updateInput,
 		updatePomodoroStoppedAt,
 	]);
