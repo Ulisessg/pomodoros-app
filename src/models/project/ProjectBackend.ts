@@ -60,4 +60,26 @@ export default class ProjectBackend extends Project {
 			await connection.end();
 		}
 	}
+	async validateProjectBelongsToUser(userId: string, projectId: number) {
+		this.validateId(projectId, "param project_id");
+		this.validateName(userId, 50, "param user_id", 35);
+		const connection = await mariaDbPool.getConnection();
+		try {
+			const project: [IProject] = await connection.query(
+				"SELECT * FROM projects WHERE project_id = ? AND user_id = ?",
+				[projectId, userId]
+			);
+			if (typeof project[0] === "undefined") {
+				throw new Error(errorMessages.projectNoBelongsToUser);
+			}
+		} catch (error) {
+			throw error;
+		} finally {
+			await connection.end();
+		}
+	}
 }
+
+export const errorMessages = {
+	projectNoBelongsToUser: "projectNoBelongsToUser",
+};

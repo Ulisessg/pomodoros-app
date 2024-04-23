@@ -1,12 +1,16 @@
+"use client";
 import { PomodorosCtx } from "@/context/PomodorosCtx";
-import React, { FC, Fragment, useContext, useEffect, useMemo } from "react";
+import React, { FC, useContext, useEffect, useMemo } from "react";
 import CreateUpdatePomodoro from "../organisms/CreateUpdatePomodoro";
 import Pomodoro from "../molecules/Pomodoro";
 import styled from "styled-components";
 import { DefaultTime } from "@/constants";
 import { theme } from "d-system";
+import { PomodorosContainerProvider } from "@/context/PomodorosContainerCtx";
+import useGetProjectId from "@/hooks/useGetProjectId";
 
 const ListPomodoros: FC<PomodorosProps> = ({ taskId }) => {
+	const projectId = useGetProjectId();
 	const { getPomodoros, pomodoros: pomodorosGroupedByTask } =
 		useContext(PomodorosCtx);
 
@@ -17,24 +21,37 @@ const ListPomodoros: FC<PomodorosProps> = ({ taskId }) => {
 	useEffect(() => {
 		void getPomodoros(taskId);
 	}, [getPomodoros, taskId]);
+
 	return (
-		<>
+		<PomodorosContainerProvider>
 			{pomodoros.length === 0 && <p>No pomodoros</p>}
 			{pomodoros.length > 0 &&
 				pomodoros.map((pom, index) => (
 					<PomodorosContainer key={`${pom.id}${pom.task_id}`}>
-						<Pomodoro duration={pom.duration} title={pom.title} index={index} />
+						<Pomodoro
+							id={pom.id}
+							duration={pom.duration}
+							title={pom.title}
+							index={index}
+							type="pomodoro"
+							projectId={projectId}
+							stopped_at={pom.pomodoro_stopped_at}
+						/>
 						{pom.rest_duration !== DefaultTime && (
 							<Pomodoro
+								id={pom.id}
 								duration={pom.rest_duration}
 								index={index}
 								title="Descanso"
+								type="rest"
+								projectId={projectId}
+								stopped_at={pom.rest_stopped_at}
 							/>
 						)}
 					</PomodorosContainer>
 				))}
 			<CreateUpdatePomodoro taskId={taskId} />
-		</>
+		</PomodorosContainerProvider>
 	);
 };
 
