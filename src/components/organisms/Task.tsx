@@ -35,6 +35,10 @@ const TaskContainer = styled(Link)`
 	padding: ${theme.spacing * 3}px;
 	border-bottom: 1px solid ${theme.colors.dark1};
 	text-decoration: none;
+	color: ${theme.colors.dark2};
+	&:visited {
+		color: ${theme.colors.dark2};
+	}
 `;
 
 interface TaskProps {
