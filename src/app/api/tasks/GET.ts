@@ -1,6 +1,9 @@
+import { ensureSuperTokensInit } from "@/config/backend";
 import { TTask } from "@/context/TaskCtx/TaskCtx";
 import TaskBackend from "@/models/task/TaskBackend";
 import { NextRequest, NextResponse } from "next/server";
+
+ensureSuperTokensInit();
 
 export default async function GET(req: NextRequest) {
 	try {
