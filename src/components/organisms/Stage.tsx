@@ -54,8 +54,8 @@ const StageContainer = styled.div`
 	overflow: scroll;
 	border: 1px solid ${theme.colors.dark1};
 	border-radius: ${theme.spacing}px;
-	width: ${theme.spacing * 40}px;
-	height: ${theme.spacing * 50}px;
+	width: ${theme.spacing * 35}px;
+	height: ${theme.spacing * 45}px;
 `;
 
 const StageTitle = styled.p`

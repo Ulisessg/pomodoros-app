@@ -24,6 +24,7 @@ const ProjectDetailsContainer = styled.div`
 	display: grid;
 	height: 100%;
 	justify-content: center;
+	justify-items: center;
 `;
 
 export default ProjectDetails;
