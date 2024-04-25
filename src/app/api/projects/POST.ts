@@ -1,8 +1,11 @@
+import { ensureSuperTokensInit } from "@/config/backend";
 import { IProject } from "@/models/project/Project";
 import ProjectBackend from "@/models/project/ProjectBackend";
 import { IStage } from "@/models/stage/Stage";
 import StageBackend from "@/models/stage/StageBackend";
 import { NextRequest, NextResponse } from "next/server";
+
+ensureSuperTokensInit();
 
 export default async function POST(req: NextRequest) {
 	try {

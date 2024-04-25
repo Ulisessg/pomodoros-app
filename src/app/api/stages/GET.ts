@@ -1,6 +1,9 @@
+import { ensureSuperTokensInit } from "@/config/backend";
 import { IStage } from "@/models/stage/Stage";
 import StageBackend from "@/models/stage/StageBackend";
 import { NextRequest, NextResponse } from "next/server";
+
+ensureSuperTokensInit();
 
 export default async function name(req: NextRequest) {
 	try {

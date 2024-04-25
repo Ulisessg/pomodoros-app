@@ -1,7 +1,10 @@
+import { ensureSuperTokensInit } from "@/config/backend";
 import { IPomodoro } from "@/models/pomodoro/Pomodoro";
 import PomodoroBackend from "@/models/pomodoro/PomodoroBackend";
 import { ValidationError, ValidationTypeError } from "@/utils/tableValidations";
 import { NextRequest, NextResponse } from "next/server";
+
+ensureSuperTokensInit();
 
 export default async function GET(req: NextRequest) {
 	try {

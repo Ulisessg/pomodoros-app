@@ -1,6 +1,9 @@
+import { ensureSuperTokensInit } from "@/config/backend";
 import TaskBackend from "@/models/task/TaskBackend";
 import { ValidationError, ValidationTypeError } from "@/utils/tableValidations";
 import { NextRequest, NextResponse } from "next/server";
+
+ensureSuperTokensInit();
 
 export default async function PATCH(req: NextRequest) {
 	try {
