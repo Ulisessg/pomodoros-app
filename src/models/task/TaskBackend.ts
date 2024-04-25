@@ -68,10 +68,10 @@ export default class TaskBackend extends Task {
 	public async updateStage(): Promise<void> {
 		const connection = await mariaDbPool.getConnection();
 		try {
-			connection.query("UPDATE tasks SET stage_id = ? WHERE tasks.id = ?", [
-				this.stage_id,
-				this.id,
-			]);
+			await connection.query(
+				"UPDATE tasks SET stage_id = ? WHERE tasks.id = ?",
+				[this.stage_id, this.id]
+			);
 		} catch (error) {
 			throw error;
 		} finally {
