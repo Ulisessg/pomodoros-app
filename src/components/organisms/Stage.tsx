@@ -44,29 +44,57 @@ const Stage: FC<StageProps> = ({ title, stageId, projectId }) => {
 							</Fragment>
 						);
 					})}
-				{!stageHaveTasks && <p>No Tasks</p>}
+				{!stageHaveTasks && (
+					<StageEmptyMessageContainer>
+						<StageEmptyMessage>No Tasks yet</StageEmptyMessage>
+					</StageEmptyMessageContainer>
+				)}
 			</TasksContainer>
 		</StageContainer>
 	);
 };
+
+const StageHeight = theme.spacing * 45;
+const StageTitleHeight = theme.spacing * 2;
+const StageTitlePadding = StageTitleHeight;
 
 const StageContainer = styled.div`
 	overflow: scroll;
 	border: 1px solid ${theme.colors.dark1};
 	border-radius: ${theme.spacing}px;
 	width: ${theme.spacing * 35}px;
-	height: ${theme.spacing * 45}px;
+	height: ${StageHeight}px;
 `;
 
 const StageTitle = styled.p`
 	text-align: center;
-	padding: ${theme.spacing * 2}px;
+	padding: ${StageTitlePadding}px;
+	height: ${StageTitleHeight}px;
 `;
 
 const TasksContainer = styled.div`
 	display: grid;
 	width: 100%;
 	margin-bottom: ${theme.spacing}px;
+`;
+
+const StageEmptyMessageContainer = styled.div`
+	grid: flex;
+	/**
+	* Padding includes top and bottom
+	* Second StageTitleHeight is StageEmptyMessage height
+	*/
+	height: ${StageHeight -
+	StageTitleHeight -
+	StageTitleHeight -
+	StageTitlePadding * 2}px;
+	margin: 0px;
+	align-content: center;
+`;
+const StageEmptyMessage = styled.p`
+	text-align: center;
+
+	height: ${StageTitleHeight}px;
 `;
 
 interface StageProps {
