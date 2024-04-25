@@ -122,6 +122,14 @@ const Pomodoro: FC<PomodoroProps> = ({
 		updateInput,
 		updatePomodoroStoppedAt,
 	]);
+	useEffect(() => {
+		const showPrompt = (ev: BeforeUnloadEvent) => {
+			if (startPomodoro) {
+				ev.preventDefault();
+			}
+		};
+		window.onbeforeunload = showPrompt;
+	}, [startPomodoro]);
 	return (
 		<Container>
 			<Title>{title || `Pomodoro ${index + 1}`}</Title>

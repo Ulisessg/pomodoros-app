@@ -7,6 +7,7 @@ import LinkProjectSettings from "@/components/atoms/LinkProjectSettings";
 import { TaskCtx } from "@/context/TaskCtx";
 import { StagesCtx } from "@/context/StagesCtx";
 import Stage from "@/components/organisms/Stage";
+import { MinScreenWidth } from "@/constants";
 
 const ListOfStages: FC = () => {
 	const projectId = useGetProjectId();
@@ -65,11 +66,22 @@ const ListOfStages: FC = () => {
 const ListOfTasksContainer = styled.div`
 	display: grid;
 	margin-bottom: ${theme.spacing * 6}px;
+	width: 100%;
+	justify-content: center;
 `;
 
+const StagesGap = theme.spacing * 2;
+
 const StagesContainer = styled.div`
-	display: flex;
-	gap: ${theme.spacing * 2}px;
+	display: grid;
+	gap: ${StagesGap}px;
+	grid-template-columns: 1fr;
+	@media screen and (min-width: ${MinScreenWidth.tablet}px) {
+		grid-template-columns: 1fr 1fr;
+	}
+	@media screen and (min-width: ${MinScreenWidth.desktop}px) {
+		grid-template-columns: repeat(3, 1fr);
+	}
 `;
 
 export default ListOfStages;
