@@ -2,7 +2,7 @@
 import { IProject } from "@/models/project/Project";
 import { FC, ReactNode, createContext, useEffect, useState } from "react";
 import ProjectFrontend from "@/models/project/ProjectFrontend";
-import { redirectToProjectCreated } from "@/app/actions";
+import { redirectToEditStages } from "@/app/actions";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 const initialState: ProjectsCtxState = {
@@ -27,8 +27,8 @@ export const ProjectsCtxProvider: FC<{ children: ReactNode }> = ({
 	);
 
 	const addProject = (project: IProject) => {
+		redirectToEditStages(project.id);
 		setProjects((prev) => [...prev, project]);
-		redirectToProjectCreated(project.id);
 	};
 
 	useEffect(() => {
