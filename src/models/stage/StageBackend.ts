@@ -29,7 +29,7 @@ export default class StageBackend extends Stage {
 		try {
 			const stagesData = this.parseStagesDataToBatchQuery(stages);
 			await connection.batch<IStage[]>(
-				`INSERT INTO stages (id, name, color, project_id, stage_order) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE stage_order=VALUES(stage_order)
+				`INSERT INTO stages (id, name, color, project_id, stage_order) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE stage_order=VALUES(stage_order), name=VALUES(name)
 			`,
 				stagesData
 			);

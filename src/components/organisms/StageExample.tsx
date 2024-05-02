@@ -104,6 +104,7 @@ const StageExample: FC<Props> = ({
 							"aria-label": "Nombre del stage",
 						}}
 						onBlur={handleOnBlur}
+						data-edit-stage-name
 					/>
 				</StageTitleContainer>
 				<TasksContainer>
@@ -124,7 +125,7 @@ const StageExample: FC<Props> = ({
 							<TrashCanStyles
 								height={40}
 								width={40}
-								title="Eliminar stage"
+								title="Eliminar Stage"
 								type="button"
 								onClick={handleDeleteStage}
 							/>

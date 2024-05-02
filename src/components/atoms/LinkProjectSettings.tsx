@@ -6,7 +6,10 @@ import { StaticImagesPath } from "@/constants";
 
 const LinkProjectSettings: FC<LinkProjectSettingsProps> = ({ projectId }) => {
 	return (
-		<LinkStyles href={`/project/${projectId}/settings`}>
+		<LinkStyles
+			href={`/project/${projectId}/settings`}
+			data-project-setting-link
+		>
 			<Image
 				alt="Settings icon"
 				src={`${StaticImagesPath}settings-cog-svgrepo-com.svg`}

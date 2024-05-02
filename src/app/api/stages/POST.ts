@@ -13,8 +13,8 @@ export default async function POST(req: NextRequest) {
 		};
 		const body: UpdateWorkFlowBody = await req.json();
 		const StageBack = new StageBackend();
-		const result = await StageBack.updateWorkFlow(body.stages);
-		return NextResponse.json(result, { status: 201 });
+		await StageBack.updateWorkFlow(body.stages);
+		return NextResponse.json(null, { status: 201 });
 	} catch (error) {
 		if (
 			error instanceof ValidationError ||

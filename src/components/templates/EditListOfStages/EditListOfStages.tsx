@@ -137,7 +137,7 @@ const EditListOfStages = () => {
 						<Button
 							colorMessage="info"
 							size="small"
-							text="Añadir stage"
+							text="Añadir Stage"
 							type="button"
 							onClick={addNewStage}
 							disabled={stagesLocal.length >= 255}

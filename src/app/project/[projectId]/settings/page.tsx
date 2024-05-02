@@ -8,7 +8,7 @@ const ProjectSettings = () => {
 	return (
 		<div>
 			ProjectSettings
-			<Link href={`${path}/edit-stages`} text="Edit stages" />
+			<Link href={`${path}/edit-stages`} text="Edit Stages" />
 		</div>
 	);
 };
