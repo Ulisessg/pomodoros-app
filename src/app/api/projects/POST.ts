@@ -1,8 +1,10 @@
+import { ServerErrorResponse } from "@/apiConstants";
 import { ensureSuperTokensInit } from "@/config/backend";
 import { IProject } from "@/models/project/Project";
 import ProjectBackend from "@/models/project/ProjectBackend";
 import { IStage } from "@/models/stage/Stage";
 import StageBackend from "@/models/stage/StageBackend";
+import { ValidationError, ValidationTypeError } from "@/utils/tableValidations";
 import { NextRequest, NextResponse } from "next/server";
 
 ensureSuperTokensInit();
@@ -24,16 +26,19 @@ export default async function POST(req: NextRequest) {
 		BacklogStage.name = "Backlog";
 		BacklogStage.color = "0c4b8e";
 		BacklogStage.project_id = projectCreated.id;
+		BacklogStage.stage_order = 0;
 
 		const WorkingOnStage = new StageBackend();
 		WorkingOnStage.name = "Working On";
 		WorkingOnStage.color = "ecf7fe";
 		WorkingOnStage.project_id = projectCreated.id;
+		WorkingOnStage.stage_order = 1;
 
 		const DoneStage = new StageBackend();
 		DoneStage.name = "Done";
 		DoneStage.color = "189bfa";
 		DoneStage.project_id = projectCreated.id;
+		DoneStage.stage_order = 2;
 
 		const defaultStagesCreated = await Stages.addStages([
 			BacklogStage,
@@ -58,14 +63,22 @@ export default async function POST(req: NextRequest) {
 				{ status: 409 }
 			);
 		}
-		return NextResponse.json<CreateProjectResponse>(
-			{
-				error: true,
-				project: {} as unknown as any,
-				stages: [],
-			},
-			{ status: 400 }
-		);
+		if (
+			error instanceof ValidationError ||
+			error instanceof ValidationTypeError
+		) {
+			return NextResponse.json<CreateProjectResponse>(
+				{
+					error: true,
+					project: {} as unknown as any,
+					stages: [],
+				},
+				{ status: 400 }
+			);
+		}
+		// eslint-disable-next-line no-console
+		console.log(error);
+		return ServerErrorResponse;
 	}
 }
 

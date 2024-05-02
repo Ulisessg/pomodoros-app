@@ -1,13 +1,14 @@
 "use client";
 import { FC, Fragment, useContext, useEffect, useMemo } from "react";
-import { LoadingSpinner, theme } from "d-system";
-import styled from "styled-components";
+import { LoadingSpinner } from "d-system";
 import useGetProjectId from "@/hooks/useGetProjectId";
 import LinkProjectSettings from "@/components/atoms/LinkProjectSettings";
 import { TaskCtx } from "@/context/TaskCtx";
 import { StagesCtx } from "@/context/StagesCtx";
-import Stage from "@/components/organisms/Stage";
-import { MinScreenWidth } from "@/constants";
+import Stage, {
+	ListOfStagesContainer,
+	StagesContainer,
+} from "@/components/organisms/Stage";
 
 const ListOfStages: FC = () => {
 	const projectId = useGetProjectId();
@@ -42,7 +43,7 @@ const ListOfStages: FC = () => {
 		tasksGroupedByStage,
 	]);
 	return (
-		<ListOfTasksContainer>
+		<ListOfStagesContainer>
 			<LinkProjectSettings projectId={projectId} />
 			<StagesContainer>
 				{stages?.length === 0 && <LoadingSpinner size="small" />}
@@ -59,29 +60,8 @@ const ListOfStages: FC = () => {
 					);
 				})}
 			</StagesContainer>
-		</ListOfTasksContainer>
+		</ListOfStagesContainer>
 	);
 };
-
-const ListOfTasksContainer = styled.div`
-	display: grid;
-	margin-bottom: ${theme.spacing * 6}px;
-	width: 100%;
-	justify-content: center;
-`;
-
-const StagesGap = theme.spacing * 2;
-
-const StagesContainer = styled.div`
-	display: grid;
-	gap: ${StagesGap}px;
-	grid-template-columns: 1fr;
-	@media screen and (min-width: ${MinScreenWidth.tablet}px) {
-		grid-template-columns: 1fr 1fr;
-	}
-	@media screen and (min-width: ${MinScreenWidth.desktop}px) {
-		grid-template-columns: repeat(3, 1fr);
-	}
-`;
 
 export default ListOfStages;

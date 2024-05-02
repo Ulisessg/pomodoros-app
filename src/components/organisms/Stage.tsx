@@ -1,12 +1,14 @@
 import { TaskCtx } from "@/context/TaskCtx";
 import { theme } from "d-system";
 import { DragEvent, FC, Fragment, useContext, useMemo } from "react";
-import styled from "styled-components";
-import Task, { DragEventData } from "./Task";
+import styled, { css } from "styled-components";
+import Task, { DragEventData } from "@/components/organisms/Task";
+import { ITask } from "@/models/task/Task";
+import { MinScreenWidth } from "@/constants";
 
 const Stage: FC<StageProps> = ({ title, stageId, projectId }) => {
 	const { tasks: tasksGroupedByStage, moveTaskToStage } = useContext(TaskCtx);
-	const tasks = useMemo(() => {
+	const tasks: ITask[] = useMemo(() => {
 		return tasksGroupedByStage[stageId];
 	}, [stageId, tasksGroupedByStage]);
 	const stageHaveTasks: boolean = useMemo(() => {
@@ -40,7 +42,12 @@ const Stage: FC<StageProps> = ({ title, stageId, projectId }) => {
 					tasks.map((task, index) => {
 						return (
 							<Fragment key={`${stageId}${task.id}`}>
-								<Task task={task} taskIndex={index} projectId={projectId} />
+								<Task
+									task={task}
+									taskIndex={index}
+									projectId={projectId}
+									isExampleTask={false}
+								/>
 							</Fragment>
 						);
 					})}
@@ -58,7 +65,7 @@ const StageHeight = theme.spacing * 45;
 const StageTitleHeight = theme.spacing * 2;
 const StageTitlePadding = StageTitleHeight;
 
-const StageContainer = styled.div`
+export const StageContainerStyles = css`
 	overflow: scroll;
 	border: 1px solid ${theme.colors.dark1};
 	border-radius: ${theme.spacing}px;
@@ -66,13 +73,21 @@ const StageContainer = styled.div`
 	height: ${StageHeight}px;
 `;
 
-const StageTitle = styled.p`
+export const StageContainer = styled.div`
+	${StageContainerStyles}
+`;
+
+export const StageTitleStyles = css`
 	text-align: center;
 	padding: ${StageTitlePadding}px;
 	height: ${StageTitleHeight}px;
 `;
 
-const TasksContainer = styled.div`
+export const StageTitle = styled.p`
+	${StageTitleStyles}
+`;
+
+export const TasksContainer = styled.div`
 	display: grid;
 	width: 100%;
 	margin-bottom: ${theme.spacing}px;
@@ -97,7 +112,30 @@ const StageEmptyMessage = styled.p`
 	height: ${StageTitleHeight}px;
 `;
 
-interface StageProps {
+// CONTAINERS
+
+const StagesGap = theme.spacing * 2;
+
+export const StagesContainer = styled.div`
+	display: grid;
+	gap: ${StagesGap}px;
+	grid-template-columns: 1fr;
+	@media screen and (min-width: ${MinScreenWidth.tablet}px) {
+		grid-template-columns: 1fr 1fr;
+	}
+	@media screen and (min-width: ${MinScreenWidth.desktop}px) {
+		grid-template-columns: repeat(3, 1fr);
+	}
+`;
+
+export const ListOfStagesContainer = styled.div`
+	display: grid;
+	margin-bottom: ${theme.spacing * 6}px;
+	width: 100%;
+	justify-content: center;
+`;
+
+export interface StageProps {
 	title: string;
 	color: string;
 	stageId: number;

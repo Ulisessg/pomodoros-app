@@ -1,3 +1,5 @@
 import GET from "./GET";
+import POST from "./POST";
+import DELETE from "./DELETE";
 
-export { GET };
+export { GET, POST, DELETE };

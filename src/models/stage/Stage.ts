@@ -1,23 +1,33 @@
 import { Tables } from "@/Types";
 import { HexColorRegex } from "@/utils/regex";
-import { idValidations, nameValidations } from "@/utils/tableValidations";
+import TableValidations from "../TableValidations";
 
 const table: Tables = "stages";
 
-export default abstract class Stage implements IStage {
+export default abstract class Stage extends TableValidations implements IStage {
 	private _id: number = NaN;
 	private _name: string = "";
 	private _color: string = "";
 	private _project_id: number = NaN;
+	private _stage_order: number = NaN;
+
+	constructor() {
+		super(table);
+	}
+
+	public get stage_order(): number {
+		return this._stage_order;
+	}
+	public set stage_order(value: number) {
+		this.validateId(value, "stage_order");
+		this._stage_order = value;
+	}
 
 	public get id(): number {
 		return this._id;
 	}
 	public set id(value: number) {
-		idValidations({
-			id: value,
-			table,
-		});
+		this.validateId(value, "Stage id");
 		this._id = value;
 	}
 	public get name(): string {
@@ -37,28 +47,14 @@ export default abstract class Stage implements IStage {
 		return this._project_id;
 	}
 	public set project_id(value: number) {
-		this.validateId(value);
+		this.validateId(value, "project_id");
 		this._project_id = value;
-	}
-
-	// Validations
-	public validateId(newId?: number) {
-		const id = newId || this.id;
-		idValidations({
-			id: id,
-			table,
-		});
 	}
 
 	public validateColor(col?: string): string {
 		const color = col || this.color;
 
-		nameValidations({
-			maxNameSize: 6,
-			name: color,
-			table,
-			extraMessage: "Color name",
-		});
+		this.validateName(color, 6, "color", 6);
 
 		const colorUpperCase = color.toUpperCase();
 
@@ -70,20 +66,13 @@ export default abstract class Stage implements IStage {
 		return colorUpperCase;
 	}
 
-	public validateName(nName?: string) {
-		const name = nName || this.name;
-		nameValidations({
-			maxNameSize: 50,
-			name: name,
-			table,
-		});
-	}
-
 	// eslint-disable-next-line no-unused-vars
 	public abstract addStages(stages: AddStagesParam): Promise<IStage[]>;
 	public abstract updateStage(): Promise<any>;
-	public abstract deleteStage(): Promise<any>;
+	public abstract deleteStage(): Promise<void>;
 	public abstract getStages(): Promise<Array<IStage>>;
+	// eslint-disable-next-line no-unused-vars
+	public abstract updateWorkFlow(stages: IStage[]): Promise<void>;
 }
 
 export interface IStage {
@@ -91,6 +80,7 @@ export interface IStage {
 	name: string;
 	color: string;
 	project_id: number;
+	stage_order: number;
 }
 
 export type AddStagesParam = Array<Omit<IStage, "id">>;
