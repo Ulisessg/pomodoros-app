@@ -1,9 +1,18 @@
+const nextJest = require("next/jest.js");
+
+const createJestConfig = nextJest({
+	dir: "./",
+});
+
 /** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
+const config = {
+	coverageProvider: "v8",
+	testEnvironment: "jsdom",
 	preset: "ts-jest",
-	testEnvironment: "node",
 	// Typescript import alias
 	moduleNameMapper: {
 		"^@/(.*)$": "<rootDir>/src/$1",
 	},
 };
+
+module.exports = createJestConfig(config);
