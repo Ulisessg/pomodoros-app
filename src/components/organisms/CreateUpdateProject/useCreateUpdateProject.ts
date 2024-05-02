@@ -23,21 +23,22 @@ export default function useCreateUpdateProject({
 	const { inputsData, inputsErrors, inputsInitialValues, ...UseInputsRest } =
 		useInputs(
 			{
-				name: projectName || "",
-				description: projectDescription || "",
+				projectName: projectName || "",
+				projectDescription: projectDescription || "",
 			},
 			true
 		);
 
 	const allowCreateUpdateProject = useMemo((): boolean => {
-		if (inputsErrors.name || inputsData.name.length < 3) return false;
+		if (inputsErrors.projectName || inputsData.projectName.length < 3)
+			return false;
 		if (typeof projectName === "string") {
 			const initialDescription = inputsInitialValues.get(
 				"description"
 			) as string;
-			const currentDescription = inputsData.description;
+			const currentDescription = inputsData.projectDescription;
 			const initialName = inputsInitialValues.get("name") as string;
-			const currentName = inputsData.name;
+			const currentName = inputsData.projectName;
 
 			if (
 				initialName === currentName &&
@@ -48,9 +49,9 @@ export default function useCreateUpdateProject({
 		}
 		return true;
 	}, [
-		inputsData.description,
-		inputsData.name,
-		inputsErrors.name,
+		inputsData.projectDescription,
+		inputsData.projectName,
+		inputsErrors.projectName,
 		inputsInitialValues,
 		projectName,
 	]);
@@ -58,8 +59,8 @@ export default function useCreateUpdateProject({
 	const createUpdateProject = async (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		const Project = new ProjectFrontend();
-		Project.name = inputsData.name;
-		Project.description = inputsData.description;
+		Project.name = inputsData.projectName;
+		Project.description = inputsData.projectDescription;
 		Project.user_id = userId;
 		if (typeof projectName === "string") {
 			Project.updateProject();
@@ -87,7 +88,7 @@ interface UseCreateUpdateProjectArgs {
 }
 
 interface UseCreateUpdateProjectReturn
-	extends UseInputsReturn<{ name: string; description: string }> {
+	extends UseInputsReturn<{ projectName: string; projectDescription: string }> {
 	actionMessage: "Actualizar Proyecto" | "Crear proyecto";
 	// eslint-disable-next-line no-unused-vars
 	createUpdateProject: (e: MouseEvent<HTMLButtonElement>) => Promise<void>;

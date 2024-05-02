@@ -1,3 +1,7 @@
+export const GoPomodorosHome = () => {
+	cy.visit("http://localhost:3002/pomodoros");
+};
+
 export const LoginUser = () => {
 	cy.get("#supertokens-root")
 		.shadow()
