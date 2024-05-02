@@ -2,6 +2,7 @@ import UserFrontend from "@/models/user/UserFrontend";
 import { Title } from "d-system";
 import { FC, ReactNode, createContext, useEffect, useState } from "react";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import { redirectToAuth } from "supertokens-auth-react";
 
 const initialState: State = {
 	userName: "",
@@ -40,7 +41,11 @@ export const UserCtxProvider: FC<Props> = ({ children }) => {
 
 	useEffect(() => {
 		if (!session.loading) {
-			void getUser();
+			if (session.doesSessionExist) {
+				void getUser();
+			} else {
+				redirectToAuth();
+			}
 		}
 	}, [session]);
 
