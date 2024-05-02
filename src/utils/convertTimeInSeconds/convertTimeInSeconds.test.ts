@@ -1,7 +1,7 @@
 import { expect } from "@jest/globals";
 
 import convertTimeInSeconds from "./convertTimeInSeconds";
-import { ValidationTypeError } from "../tableValidations";
+import { ValidationTypeError } from "@/models/TableValidations";
 
 describe("Convert Time In Seconds util", () => {
 	it("Should throw error, time is not string", () => {
