@@ -1,6 +1,9 @@
 import { ensureSuperTokensInit } from "@/config/backend";
 import TaskBackend from "@/models/task/TaskBackend";
-import { ValidationError, ValidationTypeError } from "@/utils/tableValidations";
+import {
+	ValidationError,
+	ValidationTypeError,
+} from "@/models/TableValidations";
 import { NextRequest, NextResponse } from "next/server";
 
 ensureSuperTokensInit();

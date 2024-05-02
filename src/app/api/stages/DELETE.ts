@@ -4,7 +4,10 @@ import {
 	ServerErrorResponse,
 } from "@/apiConstants";
 import StageBackend from "@/models/stage/StageBackend";
-import { ValidationError, ValidationTypeError } from "@/utils/tableValidations";
+import {
+	ValidationError,
+	ValidationTypeError,
+} from "@/models/TableValidations";
 import { NextRequest } from "next/server";
 
 export default async function DELETE(req: NextRequest) {

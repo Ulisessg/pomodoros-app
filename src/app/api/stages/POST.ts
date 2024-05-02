@@ -1,7 +1,10 @@
 import { ensureSuperTokensInit } from "@/config/backend";
 import { IStage } from "@/models/stage/Stage";
 import StageBackend from "@/models/stage/StageBackend";
-import { ValidationError, ValidationTypeError } from "@/utils/tableValidations";
+import {
+	ValidationError,
+	ValidationTypeError,
+} from "@/models/TableValidations";
 import { NextRequest, NextResponse } from "next/server";
 
 ensureSuperTokensInit();

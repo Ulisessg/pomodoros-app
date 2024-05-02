@@ -1,7 +1,10 @@
 import { Tables } from "@/Types";
 import TableValidations from "../TableValidations";
 import { TimeRegex } from "@/utils/regex";
-import { ValidationError, ValidationTypeError } from "@/utils/tableValidations";
+import {
+	ValidationError,
+	ValidationTypeError,
+} from "@/models/TableValidations";
 
 const table: Tables = "pomodoros";
 

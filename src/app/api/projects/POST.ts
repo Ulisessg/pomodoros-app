@@ -4,7 +4,10 @@ import { IProject } from "@/models/project/Project";
 import ProjectBackend from "@/models/project/ProjectBackend";
 import { IStage } from "@/models/stage/Stage";
 import StageBackend from "@/models/stage/StageBackend";
-import { ValidationError, ValidationTypeError } from "@/utils/tableValidations";
+import {
+	ValidationError,
+	ValidationTypeError,
+} from "@/models/TableValidations";
 import { NextRequest, NextResponse } from "next/server";
 
 ensureSuperTokensInit();

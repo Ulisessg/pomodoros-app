@@ -1,6 +1,6 @@
 import mariaDbPool from "@/databaseConnectors/mariaDbPool";
 import Stage, { AddStagesParam, IStage } from "./Stage";
-import { ValidationError } from "@/utils/tableValidations";
+import { ValidationError } from "@/models/TableValidations";
 
 export default class StageBackend extends Stage {
 	constructor() {

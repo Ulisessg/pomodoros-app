@@ -7,7 +7,7 @@ import { ensureSuperTokensInit } from "@/config/backend";
 import { TPomodoroTypes } from "@/models/pomodoro/Pomodoro";
 import PomodoroBackend from "@/models/pomodoro/PomodoroBackend";
 import ProjectBackend, { errorMessages } from "@/models/project/ProjectBackend";
-import { ValidationTypeError } from "@/utils/tableValidations";
+import { ValidationTypeError } from "@/models/TableValidations";
 import { NextRequest, NextResponse } from "next/server";
 import { withSession } from "supertokens-node/nextjs";
 
