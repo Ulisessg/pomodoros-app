@@ -76,7 +76,7 @@ export default abstract class Pomodoro
 
 	public validateDuration(duration: string) {
 		if (typeof duration !== "string")
-			throw new TypeError("Duration must be string");
+			throw new ValidationTypeError("Duration must be string");
 		if (duration.match(TimeRegex) === null) {
 			throw new Error("Bad time format");
 		}
