@@ -2,6 +2,10 @@ import { defineConfig } from "cypress";
 import createBundler from "@bahmutov/cypress-esbuild-preprocessor";
 import { addCucumberPreprocessorPlugin } from "@badeball/cypress-cucumber-preprocessor";
 import createEsbuildPlugin from "@badeball/cypress-cucumber-preprocessor/esbuild";
+import { config } from "dotenv";
+config({
+	path: ".env.test",
+});
 
 export default defineConfig({
 	e2e: {
@@ -17,6 +21,8 @@ export default defineConfig({
 					plugins: [createEsbuildPlugin(config)],
 				})
 			);
+			config.env.TEST_AUTH_USER = process.env.TEST_AUTH_USER;
+			config.env.TEST_AUTH_PASSWORD = process.env.TEST_AUTH_PASSWORD;
 			return config;
 		},
 	},
