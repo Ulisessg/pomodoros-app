@@ -1,7 +1,7 @@
 import { ProjectsCtx } from "@/context/ProjectsCtx";
 import { FC, Fragment, useContext } from "react";
-import Project from "../molecules/Project";
 import styled from "styled-components";
+import { DetailCard } from "d-system";
 
 const ListOfProjects: FC = () => {
 	const { projects } = useContext(ProjectsCtx);
@@ -10,7 +10,11 @@ const ListOfProjects: FC = () => {
 		<ListOfProjectsContainer data-list-of-projects>
 			{projects.map((proj) => (
 				<Fragment key={proj.id}>
-					<Project project={proj} />
+					<DetailCard
+						link={`/project/${proj.id}`}
+						title={proj.name}
+						description={proj.description}
+					/>
 				</Fragment>
 			))}
 		</ListOfProjectsContainer>
@@ -18,12 +22,17 @@ const ListOfProjects: FC = () => {
 };
 
 const ListOfProjectsContainer = styled.div`
-	display: flex;
+	display: grid;
 	justify-content: center;
 	height: 100%;
 	gap: 20px;
-	@media screen and (max-width: 767px) {
-		flex-direction: column;
+	grid-template-columns: 1fr;
+	justify-items: center;
+	@media screen and (min-width: 769px) {
+		grid-template-columns: 1fr 1fr;
+	}
+	@media screen and (min-width: 1201px) {
+		grid-template-columns: 1fr 1fr 1fr;
 	}
 `;
 
