@@ -9,6 +9,7 @@ import Stage, {
 	ListOfStagesContainer,
 	StagesContainer,
 } from "@/components/organisms/Stage";
+import getFirstObjectKey from "@/utils/getFirstObjectKey";
 
 const ListOfStages: FC = () => {
 	const projectId = useGetProjectId();
@@ -23,20 +24,13 @@ const ListOfStages: FC = () => {
 			void getStages(projectId);
 			return;
 		}
-		let firstStageInTasks: string | undefined = undefined;
-		let firstProject: string | undefined = undefined;
-		for (const stageId in tasksGroupedByStage) {
-			firstStageInTasks = stageId;
-			break;
-		}
-		for (const projectId in StagesGroupedByProject) {
-			firstProject = projectId;
-			break;
-		}
+		const firstStage = getFirstObjectKey(tasksGroupedByStage);
+		const firstProject = getFirstObjectKey(StagesGroupedByProject);
+
 		if (typeof firstProject === "undefined") {
 			void getStages(projectId);
 		}
-		if (typeof firstStageInTasks === "undefined") {
+		if (typeof firstStage === "undefined") {
 			void getTasks(projectId);
 		}
 	}, [
