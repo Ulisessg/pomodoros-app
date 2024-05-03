@@ -1,22 +1,24 @@
 import { Tables } from "@/Types";
-import { idValidations, nameValidations } from "@/utils/tableValidations";
+import TableValidations from "@/models/TableValidations";
 
 const table: Tables = "subtasks";
 
-export default abstract class SubTask implements ISubTask {
+export default abstract class SubTask
+	extends TableValidations
+	implements ISubTask
+{
 	private _task_id: number = NaN;
 	private _description: string = "";
 	private _name: string = "";
 	private _id: number = NaN;
-
+	constructor() {
+		super(table);
+	}
 	public get id(): number {
 		return this._id;
 	}
 	public set id(value: number) {
-		idValidations({
-			id: value,
-			table,
-		});
+		this.validateId(value, "Set id");
 		this._id = value;
 	}
 
@@ -24,11 +26,8 @@ export default abstract class SubTask implements ISubTask {
 		return this._name;
 	}
 	public set name(value: string) {
-		nameValidations({
-			maxNameSize: 50,
-			name: value,
-			table,
-		});
+		this.validateName(value, 50, "Set name", 3);
+
 		this._name = value;
 	}
 
@@ -46,11 +45,7 @@ export default abstract class SubTask implements ISubTask {
 		return this._task_id;
 	}
 	public set task_id(value: number) {
-		idValidations({
-			id: value,
-			table,
-			extraMessage: "task_id",
-		});
+		this.validateId(value, "set task_id");
 		this._task_id = value;
 	}
 	public abstract addSubTask(): Promise<ISubTask>;

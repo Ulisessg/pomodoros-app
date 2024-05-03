@@ -5,7 +5,7 @@ import PomodoroFrontend from "@/models/pomodoro/PomodoroFrontend";
 import convertSecondsInTime from "@/utils/convertSecondsInTime";
 import convertTimeInSeconds from "@/utils/convertTimeInSeconds";
 import { Button, theme, useInputs } from "d-system";
-import { FC, useCallback, useContext, useEffect, useState } from "react";
+import React, { FC, useCallback, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Pomodoro: FC<PomodoroProps> = ({
@@ -88,22 +88,35 @@ const Pomodoro: FC<PomodoroProps> = ({
 			const timerDurationInSeconds = convertTimeInSeconds(timerDuration);
 
 			interval = setInterval(() => {
-				if (pomodoroElapsedSeconds < timerDurationInSeconds) {
-					const updatedSeconds = pomodoroElapsedSeconds + 1;
-
-					setPomodoroElapsedSeconds(updatedSeconds);
-
-					updateInput(
-						"pomodoro",
-						convertSecondsInTime(timerDurationInSeconds - updatedSeconds)
-					);
-				} else {
+				const updatedElapsedSeconds = pomodoroElapsedSeconds + 1;
+				const durationAndElapsedSecondsDifference =
+					timerDurationInSeconds - updatedElapsedSeconds;
+				function stopPomodoro() {
 					showNotification();
 					clearInterval(interval);
 					updateInput("pomodoro", duration);
 					setStartPomodoro(false);
 					setPomodoroElapsedSeconds(0);
 					void updatePomodoroStoppedAt(convertTimeInSeconds(duration));
+				}
+				function updateInputData() {
+					updateInput(
+						"pomodoro",
+						convertSecondsInTime(durationAndElapsedSecondsDifference)
+					);
+				}
+
+				if (durationAndElapsedSecondsDifference === 0) {
+					updateInputData();
+					stopPomodoro();
+					return;
+				}
+				if (timerDurationInSeconds > pomodoroElapsedSeconds) {
+					setPomodoroElapsedSeconds(updatedElapsedSeconds);
+
+					updateInputData();
+				} else {
+					stopPomodoro();
 				}
 			}, 1000);
 		} else {
@@ -132,10 +145,14 @@ const Pomodoro: FC<PomodoroProps> = ({
 	}, [startPomodoro]);
 	return (
 		<Container>
-			<Title>{title || `Pomodoro ${index + 1}`}</Title>
+			<Title>
+				{type === "rest" ? "Descanso" : title || `Pomodoro ${index + 1}`}
+			</Title>
 			<DurationContainer>
-				<Duration>
-					{pomodoroElapsedSeconds > 0 || startPomodoro
+				<Duration data-pomodoro-duration>
+					{pomodoroElapsedSeconds > 0 ||
+					startPomodoro ||
+					stopped_at !== "00:00:00"
 						? "Tiempo restante"
 						: "Duracion"}
 				</Duration>

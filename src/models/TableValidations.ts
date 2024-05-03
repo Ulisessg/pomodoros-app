@@ -1,5 +1,3 @@
-import { ValidationError, ValidationTypeError } from "@/utils/tableValidations";
-
 export default class TableValidations {
 	private table: string = "";
 	constructor(table: string) {
@@ -45,5 +43,18 @@ export default class TableValidations {
 		if (id < 0) {
 			throw new ValidationError(`Id invalid. ${this.table} - ${extraMessage}`);
 		}
+	}
+}
+
+// Errors
+export class ValidationError extends Error {
+	constructor(message?: string, options?: ErrorOptions) {
+		super(message, options);
+	}
+}
+
+export class ValidationTypeError extends TypeError {
+	constructor(message?: string, options?: ErrorOptions) {
+		super(message, options);
 	}
 }

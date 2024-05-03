@@ -8,7 +8,7 @@ const nextConfig = {
 		styledComponents: true,
 	},
 	distDir: ENV === "production" ? "out" : undefined,
-	basePath: ENV === "production" ? "/pomodoros" : "",
+	basePath: "/pomodoros",
 	env: {
 		NEXT_PUBLIC_VERSION: packageJson.version,
 	},

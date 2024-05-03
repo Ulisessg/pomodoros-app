@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { DragEvent, FC } from "react";
 import styled from "styled-components";
 
-const Task: FC<TaskProps> = ({ task, taskIndex, projectId }) => {
+const Task: FC<TaskProps> = ({ task, taskIndex, projectId, isExampleTask }) => {
 	const handleOnDragStart = (e: DragEvent<HTMLAnchorElement>) => {
 		const format = "text/plain";
 		e.dataTransfer.clearData();
@@ -19,8 +19,12 @@ const Task: FC<TaskProps> = ({ task, taskIndex, projectId }) => {
 	return (
 		<>
 			<TaskContainer
-				href={`/task?project=${projectId}&stage=${task.stage_id}&task=${task.id}`}
-				draggable
+				href={
+					isExampleTask
+						? "#"
+						: `/task?project=${projectId}&stage=${task.stage_id}&task=${task.id}`
+				}
+				draggable={!isExampleTask}
 				onDragStart={handleOnDragStart}
 				data-task-stage-id={task.stage_id}
 				data-task-index={taskIndex}
@@ -35,12 +39,17 @@ const TaskContainer = styled(Link)`
 	padding: ${theme.spacing * 3}px;
 	border-bottom: 1px solid ${theme.colors.dark1};
 	text-decoration: none;
+	color: ${theme.colors.dark2};
+	&:visited {
+		color: ${theme.colors.dark2};
+	}
 `;
 
 interface TaskProps {
 	task: ITask;
 	taskIndex: number;
 	projectId: number;
+	isExampleTask: boolean;
 }
 
 export default Task;

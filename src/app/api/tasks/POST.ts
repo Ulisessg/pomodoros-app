@@ -1,7 +1,10 @@
 import { ensureSuperTokensInit } from "@/config/backend";
 import { ITask } from "@/models/task/Task";
 import TaskBackend from "@/models/task/TaskBackend";
-import { ValidationError, ValidationTypeError } from "@/utils/tableValidations";
+import {
+	ValidationError,
+	ValidationTypeError,
+} from "@/models/TableValidations";
 import { NextRequest, NextResponse } from "next/server";
 
 ensureSuperTokensInit();

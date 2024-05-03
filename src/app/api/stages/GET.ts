@@ -6,8 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 ensureSuperTokensInit();
 
 export default async function name(req: NextRequest) {
+	const projectId = req.nextUrl.searchParams.get("projectId");
 	try {
-		const projectId = req.nextUrl.searchParams.get("projectId");
 		if (!projectId) {
 			return NextResponse.json(
 				{
@@ -28,6 +28,8 @@ export default async function name(req: NextRequest) {
 			{ status: 200 }
 		);
 	} catch (error) {
+		// eslint-disable-next-line no-console
+		console.log(error);
 		return NextResponse.json<GetStagesResponse>(
 			{
 				error: true,

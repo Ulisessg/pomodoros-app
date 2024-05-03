@@ -17,8 +17,8 @@ export default async function GET(request: NextRequest) {
 	return withSession(request, async (err, session) => {
 		if (err) return ServerErrorResponse;
 		if (!session) return UnAuthorizedResponse;
+		const userId = session.getUserId();
 		try {
-			const userId = session.getUserId();
 			const User = new UserBackend();
 
 			User.user_id = userId;
