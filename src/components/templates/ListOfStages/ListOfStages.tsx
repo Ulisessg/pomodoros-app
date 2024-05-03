@@ -19,6 +19,10 @@ const ListOfStages: FC = () => {
 	}, [StagesGroupedByProject, projectId]);
 
 	useEffect(() => {
+		if (typeof stages === "undefined") {
+			void getStages(projectId);
+			return;
+		}
 		let firstStageInTasks: string | undefined = undefined;
 		let firstProject: string | undefined = undefined;
 		for (const stageId in tasksGroupedByStage) {
@@ -40,6 +44,7 @@ const ListOfStages: FC = () => {
 		getStages,
 		getTasks,
 		projectId,
+		stages,
 		tasksGroupedByStage,
 	]);
 
