@@ -42,24 +42,31 @@ const ListOfStages: FC = () => {
 		projectId,
 		tasksGroupedByStage,
 	]);
+
 	return (
 		<ListOfStagesContainer>
-			<LinkProjectSettings projectId={projectId} />
-			<StagesContainer>
-				{stages?.length === 0 && <LoadingSpinner size="small" />}
-				{stages?.map((stage) => {
-					return (
-						<Fragment key={`${stage.id}`}>
-							<Stage
-								title={stage.name}
-								color={stage.color}
-								stageId={stage.id}
-								projectId={projectId}
-							/>
-						</Fragment>
-					);
-				})}
-			</StagesContainer>
+			{(stages?.length === 0 || typeof stages === "undefined") && (
+				<LoadingSpinner size="large" />
+			)}
+			{stages?.length > 0 && (
+				<>
+					<LinkProjectSettings projectId={projectId} />
+					<StagesContainer>
+						{stages?.map((stage) => {
+							return (
+								<Fragment key={`${stage.id}`}>
+									<Stage
+										title={stage.name}
+										color={stage.color}
+										stageId={stage.id}
+										projectId={projectId}
+									/>
+								</Fragment>
+							);
+						})}
+					</StagesContainer>
+				</>
+			)}
 		</ListOfStagesContainer>
 	);
 };
