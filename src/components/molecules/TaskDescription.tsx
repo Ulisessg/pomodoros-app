@@ -76,7 +76,7 @@ const EditorContainer = styled.div`
 
 const Editor = styled.textarea`
 	grid-area: editor;
-	border-right: 1px solid ${theme.colors.black1};
+	border-right: 1px solid ${theme.colors.dark1};
 	resize: vertical;
 	width: 100%;
 	height: inherit;
