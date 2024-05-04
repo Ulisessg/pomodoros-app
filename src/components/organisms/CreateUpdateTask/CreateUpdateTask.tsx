@@ -1,16 +1,14 @@
 "use client";
 import { DefaultSelectValue } from "@/constants";
 import { StagesCtx } from "@/context/StagesCtx";
-import useGetProjectId from "@/hooks/useGetProjectId";
 import { IStage } from "@/models/stage/Stage";
 import { Button, Details, Form, Input, Select } from "d-system";
-import React, { useContext, useMemo } from "react";
+import React, { FC, useContext, useMemo } from "react";
 import styled from "styled-components";
 import useCreateUpdateTask from "./useCreateUpdateTask";
 import TaskDescription from "@/components/molecules/TaskDescription";
 
-const CreateUpdateTask = () => {
-	const projectId = useGetProjectId();
+const CreateUpdateTask: FC<Props> = ({ projectId }) => {
 	const { stages } = useContext(StagesCtx);
 	const stagesData: IStage[] = useMemo(() => {
 		return stages[Number(projectId)];
@@ -81,5 +79,9 @@ const CreateUpdateTaskContainer = styled.div`
 const DetailsStyles = styled(Details)`
 	width: 100%;
 `;
+
+interface Props {
+	projectId: number;
+}
 
 export default CreateUpdateTask;
