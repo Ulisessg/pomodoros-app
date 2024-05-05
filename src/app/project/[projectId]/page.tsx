@@ -6,16 +6,14 @@ import styled from "styled-components";
 import { Title } from "d-system";
 import CreateUpdateTask from "@/components/organisms/CreateUpdateTask";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
-import useGetProjectId from "@/hooks/useGetProjectId";
 
 const ProjectDetails: FC = () => {
 	const { projectName } = useProject();
-	const projectId = useGetProjectId();
 	return (
 		<SessionAuth>
 			<ProjectDetailsContainer>
 				<Title>Proyecto: {projectName}</Title>
-				<CreateUpdateTask projectId={projectId} />
+				<CreateUpdateTask stageId={NaN} />
 				<ListOfStages />
 			</ProjectDetailsContainer>
 		</SessionAuth>

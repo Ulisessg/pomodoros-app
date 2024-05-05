@@ -1,17 +1,15 @@
-import { DefaultSelectValue } from "@/constants";
 import { TaskCtx } from "@/context/TaskCtx";
 import TaskFrontend from "@/models/task/TaskFrontend";
 import { useInputs } from "d-system";
 import { MouseEvent, useContext, useState } from "react";
 
-export default function useCreateUpdateTask() {
+export default function useCreateUpdateTask({ stageId }: Args) {
 	const [resetTaskDescription, setResetTaskDescription] =
 		useState<boolean>(false);
 	const { addTask } = useContext(TaskCtx);
 	const UseInputs = useInputs(
 		{
-			task: "",
-			stage: DefaultSelectValue,
+			task_name: "",
 		},
 		true
 	);
@@ -24,11 +22,11 @@ export default function useCreateUpdateTask() {
 				'textarea[name="description"]'
 			) as HTMLTextAreaElement;
 			const TaskFront = new TaskFrontend();
-			TaskFront.name = UseInputs.inputsData.task;
+			TaskFront.name = UseInputs.inputsData.task_name;
 			TaskFront.description = description.textContent as string;
-			TaskFront.stage_id = Number(UseInputs.inputsData.stage);
+			TaskFront.stage_id = Number(stageId);
 			const taskCreated = await TaskFront.addTask();
-			addTask(Number(UseInputs.inputsData.stage), taskCreated);
+			addTask(Number(stageId), taskCreated);
 			UseInputs.restartInputs("all");
 			description.value = "";
 			setResetTaskDescription(true);
@@ -42,7 +40,11 @@ export default function useCreateUpdateTask() {
 
 	return {
 		...UseInputs,
-		handleCreateTask,
 		resetTaskDescription,
+		handleCreateTask,
 	};
+}
+
+interface Args {
+	stageId: number;
 }
