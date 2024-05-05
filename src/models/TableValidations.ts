@@ -8,6 +8,9 @@ export default class TableValidations {
 	}
 	public validateName(
 		name: string,
+		/**
+		 * Use NaN for unlimited
+		 */
 		maxNameSize: number,
 		extraMessage: string,
 		minSize: number = 1
@@ -17,11 +20,14 @@ export default class TableValidations {
 				`Name String type required ${this.table} - ${extraMessage}`
 			);
 		}
-		if (name.length < minSize) {
-			throw new ValidationError(
-				`Username empty ${this.table} - ${extraMessage}`
-			);
+		if (!Number.isNaN(minSize)) {
+			if (name.length < minSize) {
+				throw new ValidationError(
+					`Username empty ${this.table} - ${extraMessage}`
+				);
+			}
 		}
+
 		if (name.length > maxNameSize) {
 			throw new ValidationError(
 				`Name Username length more than 30 ${this.table} - ${extraMessage}`

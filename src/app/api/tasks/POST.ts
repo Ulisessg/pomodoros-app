@@ -43,6 +43,9 @@ export default async function POST(req: NextRequest) {
 				{ status: 400 }
 			);
 		}
+		// eslint-disable-next-line no-console
+		console.log(error);
+
 		return NextResponse.json<CreateTaskResponse>(
 			{
 				error: true,

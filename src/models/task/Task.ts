@@ -16,8 +16,15 @@ export default abstract class Task extends TableValidations implements ITask {
 	private _stage_id: number = NaN;
 	private _day_id: number = NaN;
 
-	constructor() {
+	constructor(task?: Omit<ITask, "start_date">) {
 		super(table);
+		if (task) {
+			this.id = task.id ?? NaN;
+			this.name = task.name ?? "";
+			this.description = task.description ?? "";
+			this.stage_id = task.stage_id ?? NaN;
+			this.day_id = task.day_id ?? NaN;
+		}
 	}
 
 	public get day_id(): number {
@@ -54,7 +61,7 @@ export default abstract class Task extends TableValidations implements ITask {
 		return this._name;
 	}
 	public set name(value: string) {
-		this.validateName(value, 50, "name");
+		this.validateName(value, 120, "name");
 		this._name = value;
 	}
 	public get id(): number {
