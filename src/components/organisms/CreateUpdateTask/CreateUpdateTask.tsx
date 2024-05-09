@@ -1,12 +1,21 @@
 "use client";
-import { Button, Form, Input } from "d-system";
-import React, { FC, useMemo } from "react";
+import {
+  Button,
+  Form,
+  Input,
+  LoadingSpinner,
+  AcceptanceCriteria,
+  theme,
+} from "d-system";
+import React, { FC, use, useMemo } from "react";
 import styled from "styled-components";
 import useCreateUpdateTask from "./useCreateUpdateTask";
 import TaskDescription from "@/components/molecules/TaskDescription";
 import { ITask } from "@/models/task/Task";
+import { TaskCtx } from "@/context/TaskCtx";
 
 const CreateUpdateTask: FC<Props> = ({ stageId, task, taskIndex }) => {
+  const { updateTaskStatus, createTaskStatus } = use(TaskCtx);
   const formTitle: string = useMemo(() => {
     if (typeof task === "undefined") {
       return "Nueva tarea";
@@ -57,6 +66,30 @@ const CreateUpdateTask: FC<Props> = ({ stageId, task, taskIndex }) => {
           disabled={!formIsValid}
           onClick={handleCreateTask}
         />
+        <SuccessMessageContainer>
+          {(updateTaskStatus === "pending" ||
+            createTaskStatus === "pending") && <LoadingSpinner size="small" />}
+          <AcceptanceCriteria
+            error={false}
+            show={updateTaskStatus === "fulfilled"}
+            text="Tarea actualizada"
+          />
+          <AcceptanceCriteria
+            error={false}
+            show={createTaskStatus === "fulfilled"}
+            text="Tarea Creada"
+          />
+          <AcceptanceCriteria
+            error={true}
+            show={createTaskStatus === "error"}
+            text="Error creando tarea, intenta de nuevo más tarde"
+          />
+          <AcceptanceCriteria
+            error={true}
+            show={updateTaskStatus === "error"}
+            text="Error actualizando tarea, intenta de nuevo más tarde"
+          />
+        </SuccessMessageContainer>
       </Form>
     </CreateUpdateTaskContainer>
   );
@@ -64,6 +97,17 @@ const CreateUpdateTask: FC<Props> = ({ stageId, task, taskIndex }) => {
 
 const CreateUpdateTaskContainer = styled.div`
   display: grid;
+`;
+
+const SuccessMessageContainer = styled.div`
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+  & > * {
+    margin-top: ${theme.spacing * 3}px;
+
+    font-size: ${theme.spacing * 3}px;
+  }
 `;
 
 interface Props {

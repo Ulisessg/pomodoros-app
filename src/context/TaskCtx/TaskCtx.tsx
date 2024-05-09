@@ -1,141 +1,201 @@
+import { CreateTaskBody } from "@/app/api/tasks/POST";
+import { PutTaskRequestBody } from "@/app/api/tasks/PUT";
 import { DragEventData } from "@/components/organisms/Task";
+import useRequest, { Status } from "@/hooks/useRequest";
 import { ITask } from "@/models/task/Task";
 import TaskFrontend from "@/models/task/TaskFrontend";
 import { FC, ReactNode, createContext, useState } from "react";
 
 const initialState: State = {
-	tasks: {},
-	addTask: () => {},
-	getTasks: async () => {},
-	moveTaskToStage: async () => {},
-	updateTask: () => {},
-	getTasksIsLoading: true,
+  tasks: {},
+  addTask: async () => {},
+  getTasks: async () => {},
+  moveTaskToStage: async () => {},
+  updateTask: async () => {},
+  getTasksStatus: "none",
+  updateTaskStageStatus: "none",
+  updateTaskStatus: "none",
+  createTaskStatus: "none",
 };
 
 export const TaskCtx = createContext(initialState);
 
 export const TaskCtxProvider: FC<TaskCtxProps> = ({ children }) => {
-	const [tasks, setTasks] = useState<TTask>(initialState.tasks);
-	const [getTasksIsLoading, setGetTasksIsLoading] = useState<boolean>(true);
+  const [tasks, setTasks] = useState<TTask>(initialState.tasks);
 
-	const addTask: State["addTask"] = (stackId, nTask) => {
-		setTasks((prev) => {
-			const stackIdParsed: number = Number(stackId);
-			let prevTasks = prev[stackIdParsed];
-			if (!prevTasks) {
-				prevTasks = [];
-			}
-			return {
-				...prev,
-				[stackIdParsed]: [...prevTasks, nTask],
-			};
-		});
-	};
+  const { status: getTasksStatus, updateStatus: updateGetTasksStatus } =
+    useRequest();
 
-	const getTasks: State["getTasks"] = async (projectId) => {
-		const TaskFront = new TaskFrontend();
-		setGetTasksIsLoading(true);
-		const tasksGroupedByStageId = await TaskFront.getTasks(projectId);
-		setGetTasksIsLoading(false);
-		setTasks(tasksGroupedByStageId);
-	};
+  const {
+    status: updateTaskStageStatus,
+    updateStatus: setUpdateTaskStageStatus,
+  } = useRequest();
 
-	const moveTaskToStage: State["moveTaskToStage"] = async (taskData) => {
-		const { newStageId, stageId, taskIndex } = taskData;
+  const { status: updateTaskStatus, updateStatus: setUpdateTaskStatus } =
+    useRequest();
 
-		// Avoid duplicate tasks
-		if (newStageId === stageId) return;
-		const originStageTasks = tasks[Number(stageId)];
+  const { status: createTaskStatus, updateStatus: updateCreateTaskStatus } =
+    useRequest();
 
-		const taskToMove = originStageTasks.at(taskIndex) as ITask;
+  const addTask: State["addTask"] = async ({ description, name, stage_id }) => {
+    updateCreateTaskStatus("pending");
+    try {
+      const TaskFront = new TaskFrontend();
+      TaskFront.name = name;
+      TaskFront.description = description;
+      TaskFront.stage_id = stage_id;
 
-		try {
-			const TaskFront = new TaskFrontend();
-			TaskFront.day_id = taskToMove.day_id;
-			TaskFront.description = taskToMove.description;
-			TaskFront.id = taskToMove.id;
-			TaskFront.name = taskToMove.name;
-			// Update the stage id
-			TaskFront.stage_id = newStageId;
+      const taskCreated = await TaskFront.addTask();
 
-			setTasks((prev) => {
-				const tasksWithoutDeletedTask = [...originStageTasks];
-				tasksWithoutDeletedTask.splice(taskIndex, 1);
+      setTasks((prev) => {
+        const stackIdParsed: number = Number(stage_id);
+        let prevTasks = prev[stackIdParsed];
+        if (!prevTasks) {
+          prevTasks = [];
+        }
+        return {
+          ...prev,
+          [stackIdParsed]: [...prevTasks, taskCreated],
+        };
+      });
+      updateCreateTaskStatus("fulfilled");
+    } catch {
+      updateCreateTaskStatus("error");
+    }
+  };
 
-				const targetStageTasks = prev[Number(newStageId)];
-				const targetStageTasksUpdated = [...targetStageTasks];
-				// Inset the task at the beginning of the stage
-				targetStageTasksUpdated.unshift({
-					...taskToMove,
-					stage_id: newStageId,
-				});
+  const getTasks: State["getTasks"] = async (projectId) => {
+    try {
+      const TaskFront = new TaskFrontend();
+      updateGetTasksStatus("pending");
+      const tasksGroupedByStageId = await TaskFront.getTasks(projectId);
+      updateGetTasksStatus("fulfilled");
 
-				return {
-					...prev,
-					[Number(stageId)]: tasksWithoutDeletedTask,
-					[Number(newStageId)]: targetStageTasksUpdated,
-				};
-			});
-			await TaskFront.updateStage();
-		} catch {
-			return;
-		}
-	};
+      setTasks(tasksGroupedByStageId);
+    } catch {
+      updateGetTasksStatus("error");
+    }
+  };
 
-	const updateTask: State["updateTask"] = (stageId, task, taskIndex) => {
-		const parsedStageId = Number(stageId);
-		if (!Number.isInteger(stageId))
-			throw new TypeError("Stage id must be integer");
-		setTasks((prev) => {
-			const updatedTasks = [...prev[parsedStageId]];
-			updatedTasks.splice(taskIndex, 1, task);
-			return {
-				...prev,
-				[parsedStageId]: updatedTasks,
-			};
-		});
-	};
+  const moveTaskToStage: State["moveTaskToStage"] = async (taskData) => {
+    setUpdateTaskStageStatus("pending");
+    const { newStageId, stageId, taskIndex } = taskData;
 
-	return (
-		<TaskCtx.Provider
-			value={{
-				getTasksIsLoading,
-				tasks,
-				addTask,
-				getTasks,
-				moveTaskToStage,
-				updateTask,
-			}}
-		>
-			{children}
-		</TaskCtx.Provider>
-	);
+    // Avoid duplicate tasks
+    if (newStageId === stageId) return;
+    const originStageTasks = tasks[Number(stageId)];
+
+    const taskToMove = originStageTasks.at(taskIndex) as ITask;
+
+    try {
+      const TaskFront = new TaskFrontend();
+      TaskFront.day_id = taskToMove.day_id;
+      TaskFront.description = taskToMove.description;
+      TaskFront.id = taskToMove.id;
+      TaskFront.name = taskToMove.name;
+      // Update the stage id
+      TaskFront.stage_id = newStageId;
+
+      setTasks((prev) => {
+        const tasksWithoutDeletedTask = [...originStageTasks];
+        tasksWithoutDeletedTask.splice(taskIndex, 1);
+
+        const targetStageTasks = prev[Number(newStageId)];
+        const targetStageTasksUpdated = [...targetStageTasks];
+        // Inset the task at the beginning of the stage
+        targetStageTasksUpdated.unshift({
+          ...taskToMove,
+          stage_id: newStageId,
+        });
+
+        return {
+          ...prev,
+          [Number(stageId)]: tasksWithoutDeletedTask,
+          [Number(newStageId)]: targetStageTasksUpdated,
+        };
+      });
+      await TaskFront.updateStage();
+      setUpdateTaskStageStatus("fulfilled");
+    } catch {
+      setUpdateTaskStageStatus("error");
+    }
+  };
+
+  const updateTask: State["updateTask"] = async (stageId, task, taskIndex) => {
+    setUpdateTaskStatus("pending");
+    try {
+      const parsedStageId = Number(stageId);
+      const TaskFront = new TaskFrontend(task as ITask);
+      const updatedTask = await TaskFront.updateTask();
+
+      if (!Number.isInteger(stageId))
+        throw new TypeError("Stage id must be integer");
+      setTasks((prev) => {
+        const updatedTasks = [...prev[parsedStageId]];
+        updatedTasks.splice(taskIndex, 1, updatedTask);
+        return {
+          ...prev,
+          [parsedStageId]: updatedTasks,
+        };
+      });
+      setUpdateTaskStatus("fulfilled");
+    } catch {
+      setUpdateTaskStatus("error");
+    }
+  };
+
+  return (
+    <TaskCtx.Provider
+      value={{
+        getTasksStatus,
+        tasks,
+        updateTaskStageStatus,
+        updateTaskStatus,
+        createTaskStatus,
+        addTask,
+        getTasks,
+        moveTaskToStage,
+        updateTask,
+      }}
+    >
+      {children}
+    </TaskCtx.Provider>
+  );
 };
 
 interface State {
-	getTasksIsLoading: boolean;
-	tasks: TTask;
-	// eslint-disable-next-line no-unused-vars
-	addTask: (stackId: number, task: ITask) => void;
-	// eslint-disable-next-line no-unused-vars
-	getTasks: (projectId: number) => Promise<void>;
-	// eslint-disable-next-line no-unused-vars
-	moveTaskToStage: (data: UpdateTaskArg) => Promise<void>;
+  getTasksStatus: Status;
+  updateTaskStageStatus: Status;
+  updateTaskStatus: Status;
+  createTaskStatus: Status;
+  tasks: TTask;
+  // eslint-disable-next-line no-unused-vars
+  addTask: (task: CreateTaskBody) => Promise<void>;
+  // eslint-disable-next-line no-unused-vars
+  getTasks: (projectId: number) => Promise<void>;
+  // eslint-disable-next-line no-unused-vars
+  moveTaskToStage: (data: UpdateTaskArg) => Promise<void>;
 
-	// eslint-disable-next-line no-unused-vars
-	updateTask: (stageId: number, task: ITask, taskIndex: number) => void;
+  updateTask: (
+    // eslint-disable-next-line no-unused-vars
+    stageId: number,
+    // eslint-disable-next-line no-unused-vars
+    task: PutTaskRequestBody,
+    // eslint-disable-next-line no-unused-vars
+    taskIndex: number
+  ) => Promise<void>;
 }
 
 interface TaskCtxProps {
-	children: ReactNode;
+  children: ReactNode;
 }
 
 export type TTask = Record<
-	// Stage id
-	string,
-	ITask[]
+  // Stage id
+  string,
+  ITask[]
 >;
 
 interface UpdateTaskArg extends DragEventData {
-	newStageId: number;
+  newStageId: number;
 }
