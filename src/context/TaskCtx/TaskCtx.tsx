@@ -31,11 +31,17 @@ export const TaskCtxProvider: FC<TaskCtxProps> = ({ children }) => {
     updateStatus: setUpdateTaskStageStatus,
   } = useRequest();
 
-  const { status: updateTaskStatus, updateStatus: setUpdateTaskStatus } =
-    useRequest();
+  const {
+    status: updateTaskStatus,
+    updateStatus: setUpdateTaskStatus,
+    restartStatus: restartUpdateTaskStatus,
+  } = useRequest();
 
-  const { status: createTaskStatus, updateStatus: updateCreateTaskStatus } =
-    useRequest();
+  const {
+    status: createTaskStatus,
+    updateStatus: updateCreateTaskStatus,
+    restartStatus: restartCreateTaskStatus,
+  } = useRequest();
 
   const addTask: State["addTask"] = async ({ description, name, stage_id }) => {
     updateCreateTaskStatus("pending");
@@ -59,6 +65,7 @@ export const TaskCtxProvider: FC<TaskCtxProps> = ({ children }) => {
         };
       });
       updateCreateTaskStatus("fulfilled");
+      await restartCreateTaskStatus();
     } catch {
       updateCreateTaskStatus("error");
     }
@@ -139,6 +146,7 @@ export const TaskCtxProvider: FC<TaskCtxProps> = ({ children }) => {
         };
       });
       setUpdateTaskStatus("fulfilled");
+      await restartUpdateTaskStatus();
     } catch {
       setUpdateTaskStatus("error");
     }
