@@ -29,7 +29,7 @@ const Task: FC<TaskProps> = ({ task, taskIndex, projectId, isExampleTask }) => {
 				data-task-stage-id={task.stage_id}
 				data-task-index={taskIndex}
 			>
-				<p>{task.name}</p>
+				<TaskName>{task.name}</TaskName>
 			</TaskContainer>
 		</>
 	);
@@ -43,6 +43,10 @@ const TaskContainer = styled(Link)`
 	&:visited {
 		color: ${theme.colors.dark2};
 	}
+`;
+
+const TaskName = styled.p`
+	overflow-wrap: anywhere;
 `;
 
 interface TaskProps {

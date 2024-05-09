@@ -3,12 +3,15 @@ import {
 	DeletedResponse,
 	ServerErrorResponse,
 } from "@/apiConstants";
+import { ensureSuperTokensInit } from "@/config/backend";
 import StageBackend from "@/models/stage/StageBackend";
 import {
 	ValidationError,
 	ValidationTypeError,
 } from "@/models/TableValidations";
 import { NextRequest } from "next/server";
+
+ensureSuperTokensInit();
 
 export default async function DELETE(req: NextRequest) {
 	try {

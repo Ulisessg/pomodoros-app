@@ -9,8 +9,15 @@ import Stage, {
 	ListOfStagesContainer,
 	StagesContainer,
 } from "@/components/organisms/Stage";
+import getFirstObjectKey from "@/utils/getFirstObjectKey";
+import { Modal } from "@/context/ModalCtx";
+import CreateUpdateTask from "@/components/organisms/CreateUpdateTask";
 
 const ListOfStages: FC = () => {
+	const selectedStageId = (() => {
+		const newSearchParam = new URLSearchParams(window.location.search);
+		return Number(newSearchParam.get("stageId"));
+	})();
 	const projectId = useGetProjectId();
 	const { tasks: tasksGroupedByStage, getTasks } = useContext(TaskCtx);
 	const { stages: StagesGroupedByProject, getStages } = useContext(StagesCtx);
@@ -19,20 +26,17 @@ const ListOfStages: FC = () => {
 	}, [StagesGroupedByProject, projectId]);
 
 	useEffect(() => {
-		let firstStageInTasks: string | undefined = undefined;
-		let firstProject: string | undefined = undefined;
-		for (const stageId in tasksGroupedByStage) {
-			firstStageInTasks = stageId;
-			break;
+		if (typeof stages === "undefined") {
+			void getStages(projectId);
+			return;
 		}
-		for (const projectId in StagesGroupedByProject) {
-			firstProject = projectId;
-			break;
-		}
+		const firstStage = getFirstObjectKey(tasksGroupedByStage);
+		const firstProject = getFirstObjectKey(StagesGroupedByProject);
+
 		if (typeof firstProject === "undefined") {
 			void getStages(projectId);
 		}
-		if (typeof firstStageInTasks === "undefined") {
+		if (typeof firstStage === "undefined") {
 			void getTasks(projectId);
 		}
 	}, [
@@ -40,34 +44,40 @@ const ListOfStages: FC = () => {
 		getStages,
 		getTasks,
 		projectId,
+		stages,
 		tasksGroupedByStage,
 	]);
 
 	return (
-		<ListOfStagesContainer>
-			{(stages?.length === 0 || typeof stages === "undefined") && (
-				<LoadingSpinner size="large" />
-			)}
-			{stages?.length > 0 && (
-				<>
-					<LinkProjectSettings projectId={projectId} />
-					<StagesContainer>
-						{stages?.map((stage) => {
-							return (
-								<Fragment key={`${stage.id}`}>
-									<Stage
-										title={stage.name}
-										color={stage.color}
-										stageId={stage.id}
-										projectId={projectId}
-									/>
-								</Fragment>
-							);
-						})}
-					</StagesContainer>
-				</>
-			)}
-		</ListOfStagesContainer>
+		<div>
+			<ListOfStagesContainer>
+				{(stages?.length === 0 || typeof stages === "undefined") && (
+					<LoadingSpinner size="large" />
+				)}
+				{stages?.length > 0 && (
+					<>
+						<LinkProjectSettings projectId={projectId} />
+						<StagesContainer>
+							{stages?.map((stage) => {
+								return (
+									<Fragment key={`${stage.id}`}>
+										<Stage
+											title={stage.name}
+											color={stage.color}
+											stageId={stage.id}
+											projectId={projectId}
+										/>
+									</Fragment>
+								);
+							})}
+						</StagesContainer>
+					</>
+				)}
+			</ListOfStagesContainer>
+			<Modal ariaText="Añadir tarea">
+				<CreateUpdateTask stageId={selectedStageId} />
+			</Modal>
+		</div>
 	);
 };
 

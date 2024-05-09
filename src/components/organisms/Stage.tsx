@@ -1,12 +1,14 @@
 import { TaskCtx } from "@/context/TaskCtx";
-import { theme } from "d-system";
+import { Button, theme } from "d-system";
 import { DragEvent, FC, Fragment, useContext, useMemo } from "react";
 import styled, { css } from "styled-components";
 import Task, { DragEventData } from "@/components/organisms/Task";
 import { ITask } from "@/models/task/Task";
 import { MinScreenWidth } from "@/constants";
+import { ModalCtx } from "../../context/ModalCtx";
 
 const Stage: FC<StageProps> = ({ title, stageId, projectId }) => {
+	const { openModal } = useContext(ModalCtx);
 	const { tasks: tasksGroupedByStage, moveTaskToStage } = useContext(TaskCtx);
 	const tasks: ITask[] = useMemo(() => {
 		return tasksGroupedByStage[stageId];
@@ -34,30 +36,49 @@ const Stage: FC<StageProps> = ({ title, stageId, projectId }) => {
 		e.preventDefault();
 		e.dataTransfer.dropEffect = "move";
 	};
+	const handleOpenModal = () => {
+		var newurl =
+			window.location.protocol +
+			"//" +
+			window.location.host +
+			window.location.pathname +
+			`?stageId=${stageId}`;
+		window.history.pushState({ path: newurl }, "", newurl);
+		openModal();
+	};
+
 	return (
-		<StageContainer onDrop={handleOnDrop} onDragOver={handleOnDragOver}>
-			<StageTitle>{title}</StageTitle>
-			<TasksContainer>
-				{stageHaveTasks &&
-					tasks.map((task, index) => {
-						return (
-							<Fragment key={`${stageId}${task.id}`}>
-								<Task
-									task={task}
-									taskIndex={index}
-									projectId={projectId}
-									isExampleTask={false}
-								/>
-							</Fragment>
-						);
-					})}
-				{!stageHaveTasks && (
-					<StageEmptyMessageContainer>
-						<StageEmptyMessage>No Tasks yet</StageEmptyMessage>
-					</StageEmptyMessageContainer>
-				)}
-			</TasksContainer>
-		</StageContainer>
+		<div>
+			<StageContainer onDrop={handleOnDrop} onDragOver={handleOnDragOver}>
+				<StageTitle>{title}</StageTitle>
+				<TasksContainer>
+					{stageHaveTasks &&
+						tasks.map((task, index) => {
+							return (
+								<Fragment key={`${stageId}${task.id}`}>
+									<Task
+										task={task}
+										taskIndex={index}
+										projectId={projectId}
+										isExampleTask={false}
+									/>
+								</Fragment>
+							);
+						})}
+					{!stageHaveTasks && (
+						<StageEmptyMessageContainer>
+							<StageEmptyMessage>No Tasks yet</StageEmptyMessage>
+						</StageEmptyMessageContainer>
+					)}
+				</TasksContainer>
+			</StageContainer>
+			<AddTaskButton
+				colorMessage="continue"
+				size="100%"
+				text="Añadir tarea"
+				onClick={handleOpenModal}
+			/>
+		</div>
 	);
 };
 
@@ -111,6 +132,8 @@ const StageEmptyMessage = styled.p`
 
 	height: ${StageTitleHeight}px;
 `;
+
+const AddTaskButton = styled(Button)``;
 
 // CONTAINERS
 

@@ -3,19 +3,22 @@ import { ITask } from "@/models/task/Task";
 import TaskFrontend from "@/models/task/TaskFrontend";
 import { FC, ReactNode, createContext, useState } from "react";
 
-const initialState: TaskCtxState = {
+const initialState: State = {
 	tasks: {},
 	addTask: () => {},
 	getTasks: async () => {},
 	moveTaskToStage: async () => {},
+	updateTask: () => {},
+	getTasksIsLoading: true,
 };
 
 export const TaskCtx = createContext(initialState);
 
 export const TaskCtxProvider: FC<TaskCtxProps> = ({ children }) => {
 	const [tasks, setTasks] = useState<TTask>(initialState.tasks);
+	const [getTasksIsLoading, setGetTasksIsLoading] = useState<boolean>(true);
 
-	const addTask: TaskCtxState["addTask"] = (stackId, nTask) => {
+	const addTask: State["addTask"] = (stackId, nTask) => {
 		setTasks((prev) => {
 			const stackIdParsed: number = Number(stackId);
 			let prevTasks = prev[stackIdParsed];
@@ -29,13 +32,15 @@ export const TaskCtxProvider: FC<TaskCtxProps> = ({ children }) => {
 		});
 	};
 
-	const getTasks: TaskCtxState["getTasks"] = async (projectId) => {
+	const getTasks: State["getTasks"] = async (projectId) => {
 		const TaskFront = new TaskFrontend();
+		setGetTasksIsLoading(true);
 		const tasksGroupedByStageId = await TaskFront.getTasks(projectId);
+		setGetTasksIsLoading(false);
 		setTasks(tasksGroupedByStageId);
 	};
 
-	const moveTaskToStage: TaskCtxState["moveTaskToStage"] = async (taskData) => {
+	const moveTaskToStage: State["moveTaskToStage"] = async (taskData) => {
 		const { newStageId, stageId, taskIndex } = taskData;
 
 		// Avoid duplicate tasks
@@ -77,13 +82,29 @@ export const TaskCtxProvider: FC<TaskCtxProps> = ({ children }) => {
 		}
 	};
 
+	const updateTask: State["updateTask"] = (stageId, task, taskIndex) => {
+		const parsedStageId = Number(stageId);
+		if (!Number.isInteger(stageId))
+			throw new TypeError("Stage id must be integer");
+		setTasks((prev) => {
+			const updatedTasks = [...prev[parsedStageId]];
+			updatedTasks.splice(taskIndex, 1, task);
+			return {
+				...prev,
+				[parsedStageId]: updatedTasks,
+			};
+		});
+	};
+
 	return (
 		<TaskCtx.Provider
 			value={{
+				getTasksIsLoading,
 				tasks,
 				addTask,
 				getTasks,
 				moveTaskToStage,
+				updateTask,
 			}}
 		>
 			{children}
@@ -91,7 +112,8 @@ export const TaskCtxProvider: FC<TaskCtxProps> = ({ children }) => {
 	);
 };
 
-interface TaskCtxState {
+interface State {
+	getTasksIsLoading: boolean;
 	tasks: TTask;
 	// eslint-disable-next-line no-unused-vars
 	addTask: (stackId: number, task: ITask) => void;
@@ -99,6 +121,9 @@ interface TaskCtxState {
 	getTasks: (projectId: number) => Promise<void>;
 	// eslint-disable-next-line no-unused-vars
 	moveTaskToStage: (data: UpdateTaskArg) => Promise<void>;
+
+	// eslint-disable-next-line no-unused-vars
+	updateTask: (stageId: number, task: ITask, taskIndex: number) => void;
 }
 
 interface TaskCtxProps {

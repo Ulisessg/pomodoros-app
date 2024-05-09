@@ -4,8 +4,8 @@ import useProject from "./useProject";
 import ListOfStages from "@/components/templates/ListOfStages";
 import styled from "styled-components";
 import { Title } from "d-system";
-import CreateUpdateTask from "@/components/organisms/CreateUpdateTask";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
+import { ModalProvider } from "@/context/ModalCtx";
 
 const ProjectDetails: FC = () => {
 	const { projectName } = useProject();
@@ -13,8 +13,12 @@ const ProjectDetails: FC = () => {
 		<SessionAuth>
 			<ProjectDetailsContainer>
 				<Title>Proyecto: {projectName}</Title>
-				<CreateUpdateTask />
-				<ListOfStages />
+				{
+					// <CreateUpdateTask stageId={NaN} />
+				}
+				<ModalProvider>
+					<ListOfStages />
+				</ModalProvider>
 			</ProjectDetailsContainer>
 		</SessionAuth>
 	);

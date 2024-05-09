@@ -3,8 +3,8 @@ import Task, { ITask } from "./Task";
 import { TTask } from "@/context/TaskCtx/TaskCtx";
 
 export default class TaskBackend extends Task {
-	constructor() {
-		super();
+	constructor(task?: ITask) {
+		super(task);
 	}
 	public async addTask(): Promise<ITask> {
 		const connection = await mariaDbPool.getConnection();
@@ -33,8 +33,23 @@ export default class TaskBackend extends Task {
 	public deleteTask(): Promise<ITask> {
 		throw new Error("Method not implemented.");
 	}
-	public updateTask(): Promise<ITask> {
-		throw new Error("Method not implemented.");
+	public async updateTask(): Promise<ITask> {
+		const connection = await mariaDbPool.getConnection();
+		try {
+			const updatedTask: [ITask] = await connection.query(
+				`UPDATE tasks SET
+name=?, description=?, stage_id=?, day_id=?
+WHERE tasks.id = ?
+RETURNING id, name, description, start_date, stage_id, day_id 
+`,
+				[this.name, this.description, this.stage_id, this.day_id, this.id]
+			);
+			return updatedTask[0];
+		} catch (error) {
+			throw error;
+		} finally {
+			await connection.end();
+		}
 	}
 	public async getTasks(projectId: number): Promise<TTask> {
 		if (!Number.isInteger(projectId)) throw new TypeError("Invalid projectId");
