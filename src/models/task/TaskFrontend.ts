@@ -24,7 +24,7 @@ export default class TaskFrontend extends Task {
 	}
 	public async updateTask(): Promise<ITask> {
 		this.validateId(this.id, "task id");
-		this.validateName(this.name, 50, "Task name", 3);
+		this.validateName(this.name, 120, "Task name", 3);
 		const updateBody: PutTaskRequestBody = {
 			day_id: this.day_id,
 			description: this.description,
@@ -32,7 +32,7 @@ export default class TaskFrontend extends Task {
 			name: this.name,
 			stage_id: this.stage_id,
 		};
-		const updatedTaskResponse = await axiosInstance.patch<
+		const updatedTaskResponse = await axiosInstance.put<
 			ITask,
 			AxiosResponse<ITask>
 		>("/tasks", updateBody);

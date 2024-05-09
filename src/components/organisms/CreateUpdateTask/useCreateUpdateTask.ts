@@ -2,7 +2,7 @@ import { TaskCtx } from "@/context/TaskCtx";
 import { ITask } from "@/models/task/Task";
 import TaskFrontend from "@/models/task/TaskFrontend";
 import { useInputs } from "d-system";
-import { MouseEvent, useContext, useState } from "react";
+import { MouseEvent, useContext, useEffect, useState } from "react";
 
 export default function useCreateUpdateTask({
 	stageId,
@@ -19,6 +19,7 @@ export default function useCreateUpdateTask({
 		true
 	);
 
+	
 	const handleCreateTask = async (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		if (!UseInputs.checkFormValidity()) return;
@@ -28,9 +29,13 @@ export default function useCreateUpdateTask({
 
 		// Update task
 		if (task) {
-			const TaskFront = new TaskFrontend(task as ITask);
 			if (!Number.isInteger(taskIndex))
 				throw new TypeError("Task index must be int number");
+			const TaskFront = new TaskFrontend({
+				...task,
+				name: UseInputs.inputsData.task_name,
+				description: description.textContent
+			} as ITask);
 			const updatedTask = await TaskFront.updateTask();
 			updateTask(stageId, updatedTask, Number(taskIndex));
 		} else {
@@ -53,6 +58,12 @@ export default function useCreateUpdateTask({
 		}
 	};
 
+	useEffect(() => {
+		if(task) {
+			UseInputs.updateInput('task_name', task.name)
+			UseInputs.checkFormValidity()
+		}
+	}, [task])
 	return {
 		...UseInputs,
 		resetTaskDescription,
