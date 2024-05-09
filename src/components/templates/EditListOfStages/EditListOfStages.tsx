@@ -124,7 +124,7 @@ const EditListOfStages = () => {
   }, [projectId, tasks]);
 
   useEffect(() => {
-    if (getStagesStatus === "fulfilled") {
+    if (typeof stages !== "undefined") {
       initialStages.current = stages;
     }
   }, [getStagesStatus, stages]);
@@ -157,7 +157,7 @@ const EditListOfStages = () => {
       />
 
       <div>
-        {getStagesStatus === "fulfilled" && (
+        {typeof stages !== "undefined" && (
           <div>
             <Button
               colorMessage="info"
@@ -180,8 +180,7 @@ const EditListOfStages = () => {
           {/** Config link replaced with hidden <p /> */}
           <p aria-hidden="true"></p>
           <StagesContainer onDragEnd={handleOnDragEnd}>
-            {getStagesStatus === "fulfilled" &&
-              typeof stages !== "undefined" &&
+            {typeof stages !== "undefined" &&
               stagesLocal.map((stage, index) => (
                 <Fragment key={`${stage.id}-${stage.name}`}>
                   <div draggable>

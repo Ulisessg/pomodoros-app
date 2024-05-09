@@ -20,12 +20,13 @@ export default function useRequest(): UseRequest {
     setStatus("none");
   }, []);
 
-  const updateStatus: UseRequest["updateStatus"] = (newStatus) => {
+  const updateStatus: UseRequest["updateStatus"] = useCallback((newStatus) => {
     if (typeof allowedStatus.current.get(newStatus) === "undefined") {
       throw new Error("Status no allowed");
     }
     setStatus(newStatus);
-  };
+  }, []);
+
   return {
     status,
     updateStatus,

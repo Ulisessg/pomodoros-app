@@ -8,67 +8,69 @@ import CreateUpdateProject from "../organisms/CreateUpdateProject";
 import { UserCtx } from "@/context/UserCtx";
 
 const ShowProjects: FC = () => {
-	const { userInfoIsLoading, userName } = useContext(UserCtx);
-	const { getProjectsIsLoading, projects } = useContext(ProjectsCtx);
+  const { userInfoIsLoading, userName } = useContext(UserCtx);
+  const { getProjectsStatus, projects } = useContext(ProjectsCtx);
 
-	const getShowProjectsFormOrSpinner = useMemo(():
-		| "projects"
-		| "form"
-		| "spinner" => {
-		if (!getProjectsIsLoading) {
-			if (projects.length === 0) {
-				return "form";
-			}
-			return "projects";
-		}
-		return "spinner";
-	}, [getProjectsIsLoading, projects]);
+  const whatToShow = useMemo((): "projects" | "form" | "spinner" | "error" => {
+    if (getProjectsStatus === "error") return "error";
+    if (getProjectsStatus === "fulfilled") {
+      if (projects.length === 0) {
+        return "form";
+      }
+      return "projects";
+    }
+    return "spinner";
+  }, [getProjectsStatus, projects]);
 
-	if (getShowProjectsFormOrSpinner === "spinner" || userInfoIsLoading)
-		return (
-			<>
-				<LoadingSpinnerContainer>
-					<LoadingSpinner size="small" />
-				</LoadingSpinnerContainer>
-			</>
-		);
-	if (getShowProjectsFormOrSpinner === "projects")
-		return (
-			<>
-				<H2>Selecciona un proyecto</H2>
-				<ListOfProjects />
-				<h3>O si lo prefieres crea otro proyecto</h3>
-				<CreateUpdateProject />
-			</>
-		);
+  if (whatToShow === "error") {
+    return <h1>Error obteniendo los proyectos, intenta de nuevo más tarde</h1>;
+  }
+  if (whatToShow === "spinner" || userInfoIsLoading)
+    return (
+      <>
+        <LoadingSpinnerContainer>
+          <LoadingSpinner size="large" />
+        </LoadingSpinnerContainer>
+      </>
+    );
 
-	return (
-		<>
-			<Title>Hola {userName}! Comienza creando un proyecto</Title>
+  if (whatToShow === "projects")
+    return (
+      <>
+        <H2>Selecciona un proyecto</H2>
+        <ListOfProjects />
+        <h3>O si lo prefieres crea otro proyecto</h3>
+        <CreateUpdateProject />
+      </>
+    );
 
-			<CreateUpdateProject />
-		</>
-	);
+  return (
+    <>
+      <Title>Hola {userName}! Comienza creando un proyecto</Title>
+
+      <CreateUpdateProject />
+    </>
+  );
 };
 
 const ShowProjectsWrapper: FC = () => {
-	return (
-		<ShowProjectsContainer>
-			<ShowProjects />
-		</ShowProjectsContainer>
-	);
+  return (
+    <ShowProjectsContainer>
+      <ShowProjects />
+    </ShowProjectsContainer>
+  );
 };
 
 const ShowProjectsContainer = styled.div`
-	display: grid;
-	width: 100%;
-	margin-top: ${theme.spacing * 3}px;
-	gap: ${theme.spacing * 8}px;
+  display: grid;
+  width: 100%;
+  margin-top: ${theme.spacing * 3}px;
+  gap: ${theme.spacing * 8}px;
 `;
 
 const LoadingSpinnerContainer = styled.div`
-	display: flex;
-	justify-content: center;
+  display: flex;
+  justify-content: center;
 `;
 
 export default ShowProjectsWrapper;
