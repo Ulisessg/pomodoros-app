@@ -20,7 +20,11 @@ const ListOfStages: FC = () => {
   })();
   const projectId = useGetProjectId();
   const { tasks: tasksGroupedByStage, getTasks } = useContext(TaskCtx);
-  const { stages: StagesGroupedByProject, getStages } = useContext(StagesCtx);
+  const {
+    stages: StagesGroupedByProject,
+    getStages,
+    getStagesStatus,
+  } = useContext(StagesCtx);
   const stages = useMemo(() => {
     return StagesGroupedByProject[projectId];
   }, [StagesGroupedByProject, projectId]);
@@ -51,10 +55,8 @@ const ListOfStages: FC = () => {
   return (
     <div>
       <ListOfStagesContainer>
-        {(stages?.length === 0 || typeof stages === "undefined") && (
-          <LoadingSpinner size="large" />
-        )}
-        {stages?.length > 0 && (
+        {getStagesStatus === "pending" && <LoadingSpinner size="large" />}
+        {getStagesStatus === "fulfilled" && (
           <>
             <LinkProjectSettings projectId={projectId} />
             <StagesContainer>

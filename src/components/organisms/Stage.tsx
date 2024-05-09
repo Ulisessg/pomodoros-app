@@ -90,24 +90,27 @@ const Stage: FC<StageProps> = ({ title, stageId, projectId }) => {
         text="Añadir tarea"
         onClick={handleOpenModal}
       />
-      <AcceptanceCriteria
-        error={true}
-        show={updateTaskStageStatus === "error"}
-        text="Error actualizando tarea, intenta de nuevo más tarde"
-      />
+      <AcceptanceCriteriaContainerStyles>
+        <AcceptanceCriteria
+          error={true}
+          show={updateTaskStageStatus === "error"}
+          text="Error actualizando tarea, intenta de nuevo más tarde"
+        />
+      </AcceptanceCriteriaContainerStyles>
     </div>
   );
 };
 
-const StageHeight = theme.spacing * 45;
+const StageHeight = theme.spacing * 55;
 const StageTitleHeight = theme.spacing * 2;
 const StageTitlePadding = StageTitleHeight;
+const StageWidth = theme.spacing * 40;
 
 export const StageContainerStyles = css`
   overflow: scroll;
   border: 1px solid ${theme.colors.dark1};
   border-radius: ${theme.spacing}px;
-  width: ${theme.spacing * 35}px;
+  width: ${StageWidth}px;
   height: ${StageHeight}px;
 `;
 
@@ -174,6 +177,10 @@ export const ListOfStagesContainer = styled.div`
   margin-bottom: ${theme.spacing * 6}px;
   width: 100%;
   justify-content: center;
+`;
+
+const AcceptanceCriteriaContainerStyles = styled.div`
+  width: ${StageWidth}px;
 `;
 
 export interface StageProps {
