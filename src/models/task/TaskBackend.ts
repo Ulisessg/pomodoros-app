@@ -35,15 +35,15 @@ export default class TaskBackend extends Task {
 	}
 	public async updateTask(): Promise<ITask> {
 		const connection = await mariaDbPool.getConnection();
+		
 		try {
-			const updatedTask: [ITask] = await connection.query(
+			 await connection.query(
 				`UPDATE tasks SET
-name=?, description=?, stage_id=?, day_id=?
-WHERE tasks.id = ?
-RETURNING id, name, description, start_date, stage_id, day_id 
-`,
+tasks.name = ?, tasks.description = ?, tasks.stage_id = ?, tasks.day_id = ?
+WHERE tasks.id = ?`,
 				[this.name, this.description, this.stage_id, this.day_id, this.id]
 			);
+			const updatedTask: [ITask] = await connection.query('SELECT * FROM tasks WHERE tasks.id = ?', [this.id])
 			return updatedTask[0];
 		} catch (error) {
 			throw error;
