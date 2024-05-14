@@ -12,6 +12,8 @@ const ShowProjects: FC = () => {
   const { getProjectsStatus, projects } = useContext(ProjectsCtx);
 
   const whatToShow = useMemo((): "projects" | "form" | "spinner" | "error" => {
+    if (getProjectsStatus === "pending" || getProjectsStatus === "none")
+      return "spinner";
     if (getProjectsStatus === "error") return "error";
     if (getProjectsStatus === "fulfilled") {
       if (projects.length === 0) {
@@ -19,7 +21,7 @@ const ShowProjects: FC = () => {
       }
       return "projects";
     }
-    return "spinner";
+    throw new RangeError("Get Project Status invalid");
   }, [getProjectsStatus, projects]);
 
   if (whatToShow === "error") {
@@ -28,7 +30,7 @@ const ShowProjects: FC = () => {
   if (whatToShow === "spinner" || userInfoIsLoading)
     return (
       <>
-        <LoadingSpinnerContainer>
+        <LoadingSpinnerContainer data-loading-spinner>
           <LoadingSpinner size="large" />
         </LoadingSpinnerContainer>
       </>
