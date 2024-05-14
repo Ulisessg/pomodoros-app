@@ -4,7 +4,7 @@ import { GoPomodorosHome, HomeSelectProject, LoginUser } from "../../common";
 When("User succesfully creates a project", () => {
 	GoPomodorosHome();
 	LoginUser();
-	HomeSelectProject("Pomodoros App");
+	HomeSelectProject("pomodoros");
 	const formCreateProject = cy.get("form");
 	// Use time to avoid repeat same project name
 	formCreateProject

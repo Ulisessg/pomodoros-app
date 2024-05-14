@@ -16,6 +16,6 @@ export const LoginUser = () => {
 	cy.get("#supertokens-root").shadow().find("button").click();
 };
 
-export const HomeSelectProject = (projectName: string) => {
-	cy.get(`a[data-project-name="${projectName}"]`).click();
+export const HomeSelectProject = (projectLink: string) => {
+	cy.get(`a[href*="${projectLink}"]`).click();
 };
