@@ -55,7 +55,9 @@ const ListOfStages: FC = () => {
   return (
     <div>
       <ListOfStagesContainer>
-        {getStagesStatus === "pending" && <LoadingSpinner size="large" />}
+        {getStagesStatus === "pending" && (
+          <LoadingSpinner size="large" data-stages-loading-spinner />
+        )}
         {getStagesStatus === "fulfilled" && (
           <>
             <LinkProjectSettings projectId={projectId} />
