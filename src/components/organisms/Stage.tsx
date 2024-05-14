@@ -73,7 +73,7 @@ const Stage: FC<StageProps> = ({ title, stageId, projectId }) => {
             })}
           {getTasksStatus === "pending" && (
             <StageEmptyMessageContainer>
-              <LoadingSpinner size="small" />
+              <LoadingSpinner size="small" data-tasks-loading-spinner />
             </StageEmptyMessageContainer>
           )}
 
