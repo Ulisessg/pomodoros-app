@@ -56,6 +56,7 @@ const CreateUpdateProject: FC<CreateUpdateProjectProps> = ({
           text={actionMessage}
           disabled={!allowCreateUpdateProject}
           onClick={createUpdateProject}
+          data-button-create-project
         />
         {createProjectStatus === "pending" && (
           <LoadingSpinnerContainer>

@@ -1,13 +1,15 @@
-import { FC, useContext, useMemo } from "react";
+import { FC, use, useContext, useMemo } from "react";
 import H2 from "../atoms/H2";
 import ListOfProjects from "../organisms/ListOfProjects";
 import styled from "styled-components";
 import { ProjectsCtx } from "@/context/ProjectsCtx";
-import { LoadingSpinner, Title, theme } from "d-system";
+import { Button, LoadingSpinner, Title, theme } from "d-system";
 import CreateUpdateProject from "../organisms/CreateUpdateProject";
 import { UserCtx } from "@/context/UserCtx";
+import { Modal, ModalCtx, ModalProvider } from "@/context/ModalCtx";
 
 const ShowProjects: FC = () => {
+  const { openModal } = use(ModalCtx);
   const { userInfoIsLoading, userName } = useContext(UserCtx);
   const { getProjectsStatus, projects } = useContext(ProjectsCtx);
 
@@ -39,10 +41,18 @@ const ShowProjects: FC = () => {
   if (whatToShow === "projects")
     return (
       <>
-        <H2>Selecciona un proyecto</H2>
+        <Modal ariaText="Crear proyecto">
+          <CreateUpdateProject />
+        </Modal>
+        <CreateProjectButton
+          colorMessage="continue"
+          size="small"
+          text="Crear proyecto"
+          onClick={openModal}
+          data-open-create-project-button
+        />
+        <H2>Proyectos</H2>
         <ListOfProjects />
-        <h3>O si lo prefieres crea otro proyecto</h3>
-        <CreateUpdateProject />
       </>
     );
 
@@ -58,10 +68,16 @@ const ShowProjects: FC = () => {
 const ShowProjectsWrapper: FC = () => {
   return (
     <ShowProjectsContainer>
-      <ShowProjects />
+      <ModalProvider>
+        <ShowProjects />
+      </ModalProvider>
     </ShowProjectsContainer>
   );
 };
+
+const CreateProjectButton = styled(Button)`
+  justify-self: end;
+`;
 
 const ShowProjectsContainer = styled.div`
   display: grid;
