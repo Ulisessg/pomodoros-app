@@ -10921,10 +10921,10 @@ sudo-prompt@^9.0.0:
   resolved "https://registry.yarnpkg.com/sudo-prompt/-/sudo-prompt-9.2.1.tgz#77efb84309c9ca489527a4e749f287e6bdd52afd"
   integrity sha512-Mu7R0g4ig9TUuGSxJavny5Rv0egCEtpZRNMrZaYS1vxkiIxGiGUwoezU3LazIQ+KE04hTrTfNPgxU5gzi7F5Pw==
 
-supertokens-auth-react@0.40.1:
-  version "0.40.1"
-  resolved "https://registry.yarnpkg.com/supertokens-auth-react/-/supertokens-auth-react-0.40.1.tgz#0d49b68a8856be0320183b4586798dccfd0d4869"
-  integrity sha512-j4CYBkWHid+UMgNDIrrWWFS+NN5mOG2hSCLCqrHyXwxngQVxZV6oL5ADzE3aKRVw5ZHxDwm1PEU7W5FgN7MHXg==
+supertokens-auth-react@0.41.1:
+  version "0.41.1"
+  resolved "https://registry.yarnpkg.com/supertokens-auth-react/-/supertokens-auth-react-0.41.1.tgz#d828436458a7fd3ee47547c12605208d50a3548d"
+  integrity sha512-BkGY2fbSsO0huXLdxZ7Te0TDQ2NTjfKKezFSE8HRah58E1Rqr4DpPS5TqZ6QZ17ans5r2KsYc0lfw5y/HgFRew==
   dependencies:
     intl-tel-input "^17.0.19"
     prop-types "^15.7.2"
@@ -10936,10 +10936,10 @@ supertokens-js-override@0.0.4, supertokens-js-override@^0.0.4:
   resolved "https://registry.yarnpkg.com/supertokens-js-override/-/supertokens-js-override-0.0.4.tgz#9af583fbc5e1f0195dbb358c4fcf75f44c76dc09"
   integrity sha512-r0JFBjkMIdep3Lbk3JA+MpnpuOtw4RSyrlRAbrzMcxwiYco3GFWl/daimQZ5b1forOiUODpOlXbSOljP/oyurg==
 
-supertokens-node@17.0.7:
-  version "17.0.7"
-  resolved "https://registry.yarnpkg.com/supertokens-node/-/supertokens-node-17.0.7.tgz#c567b7b2da8a93d22d588dcaabb03dc915b1faf1"
-  integrity sha512-pf66qFBfyXdiCejeUsf5D1W8XfESdhflEg2MZ6XKz1iSyoSrxBl6kL33l8xMLtk3tjPmbSeUkyY3NkhsT0qyCA==
+supertokens-node@17.1.0:
+  version "17.1.0"
+  resolved "https://registry.yarnpkg.com/supertokens-node/-/supertokens-node-17.1.0.tgz#af6066359946bef787fe174302173fe834f9547e"
+  integrity sha512-rXO8pRDx5zYlNorubXgE9wO+y2JtG2AFojuPN9J7s4/eaw6kqhdSnKQ3QjALImbMSDOdUJ/fo4hWSvMqco+kSw==
   dependencies:
     content-type "^1.0.5"
     cookie "0.4.0"
@@ -10954,18 +10954,18 @@ supertokens-node@17.0.7:
     supertokens-js-override "^0.0.4"
     twilio "^4.19.3"
 
-supertokens-web-js@0.10.1:
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/supertokens-web-js/-/supertokens-web-js-0.10.1.tgz#22261b867c2c613514046d9e46939bd7a69a5199"
-  integrity sha512-Z5Xx0Nsjl/SY2SeQzdONArMzakEEu3LNKCjSi3eK11zIGgjE7fGEU0KoEZT/aBOqwLJzTfNRasYpTTIjkOH6KQ==
+supertokens-web-js@0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/supertokens-web-js/-/supertokens-web-js-0.11.0.tgz#5289f7b9ef539a2f4f02173945cbcf3b42245dbb"
+  integrity sha512-6jMmwkR+qi+cOpeymuczKqjHGK/9/1Ckfv8MUFN54k4/4Bs1FMF6wJofTuXOZHEZX80wKZmOHJKQERm8IhBWWg==
   dependencies:
     supertokens-js-override "0.0.4"
-    supertokens-website "^19.0.0"
+    supertokens-website "^20.0.0"
 
-supertokens-website@^19.0.0:
-  version "19.0.1"
-  resolved "https://registry.yarnpkg.com/supertokens-website/-/supertokens-website-19.0.1.tgz#208d1f676057b5584648a32bd6d82756a4cc26b0"
-  integrity sha512-ZXaKIo260LLEpIX8NB6Nv4CRM+lchwgIXESwkMXIQ1XSpF8zt5CDh2CBI+1b4DsGTU99q3vyaR5B+fbWc9xFqQ==
+supertokens-website@^20.0.0:
+  version "20.0.0"
+  resolved "https://registry.yarnpkg.com/supertokens-website/-/supertokens-website-20.0.0.tgz#e223dd42da303b59655bf6513e53a5e6d1b3b82e"
+  integrity sha512-a1RwunIg8LcVnZacIKkpcrhIcEJRhWkIDHH3LqPbPG+QEd3g1V+7+iDrXcTqV3JBgK8hjF+NKpFc3irCGSsoBw==
   dependencies:
     browser-tabs-lock "^1.3.0"
     supertokens-js-override "^0.0.4"
