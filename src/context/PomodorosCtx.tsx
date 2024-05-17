@@ -10,10 +10,12 @@ const initialState: State = {
   getPomodorosStatus: "none",
   createPomodoroStatus: "none",
   updatePomodoroStatus: "none",
+  deletePomodorosStatus: "none",
   pomodoros: {},
   getPomodoros: async () => {},
   createPomodoro: async () => {},
   updatePomodoro: async () => {},
+  deletePomodoros: async () => {},
 };
 
 export const PomodorosCtx = createContext(initialState);
@@ -34,6 +36,12 @@ export const PomodorosCtxProvider: FC<PomodorosCtxProviderProps> = ({
     restartStatus: restartUpdatePomodoroStatus,
   } = useRequest();
 
+  const {
+    status: deletePomodorosStatus,
+    restartStatus: restartDeletePomodorosStatus,
+    updateStatus: setDeletePomodorosStatus,
+  } = useRequest();
+
   const [pomodoros, setPomodoros] = useState<State["pomodoros"]>(
     initialState.pomodoros
   );
@@ -47,8 +55,8 @@ export const PomodorosCtxProvider: FC<PomodorosCtxProviderProps> = ({
         setPomodoros({
           [Number(taskId)]: pomodoros,
         });
-        setGetPomodorosStatus("fulfilled");
       }
+      setGetPomodorosStatus("fulfilled");
     } catch {
       setGetPomodorosStatus("error");
     }
@@ -127,16 +135,47 @@ export const PomodorosCtxProvider: FC<PomodorosCtxProviderProps> = ({
       setUpdatePomodoroStatus("error");
     }
   };
+
+  const deletePomodoros: State["deletePomodoros"] = async ({
+    pomodoroId,
+    pomodoroIndex,
+    taskId,
+  }) => {
+    setDeletePomodorosStatus("pending");
+    try {
+      const pomodoro = new PomodoroFrontend();
+      pomodoro.id = pomodoroId;
+      await pomodoro.deletePomodoro();
+      setPomodoros((prev) => {
+        const pomodorosWithoutDeleted = [...prev[Number(taskId)]];
+
+        pomodorosWithoutDeleted.splice(pomodoroIndex, 1);
+
+        return {
+          ...prev,
+          [Number(taskId)]: pomodorosWithoutDeleted,
+        };
+      });
+      setDeletePomodorosStatus("fulfilled");
+    } catch (error) {
+      setDeletePomodorosStatus("error");
+    } finally {
+      await restartDeletePomodorosStatus();
+    }
+  };
+
   return (
     <PomodorosCtx.Provider
       value={{
         getPomodorosStatus,
         createPomodoroStatus,
         updatePomodoroStatus,
+        deletePomodorosStatus,
         pomodoros,
         getPomodoros,
         createPomodoro,
         updatePomodoro,
+        deletePomodoros,
       }}
     >
       {children}
@@ -147,6 +186,7 @@ interface State {
   getPomodorosStatus: Status;
   createPomodoroStatus: Status;
   updatePomodoroStatus: Status;
+  deletePomodorosStatus: Status;
   pomodoros: Record<
     // Task id
     number,
@@ -176,7 +216,14 @@ interface State {
     // eslint-disable-next-line no-unused-vars
     updatedPomodoro: IPomodoro
   ) => Promise<void>;
+  // eslint-disable-next-line no-unused-vars
+  deletePomodoros: (args0: {
+    pomodoroId: number;
+    pomodoroIndex: number;
+    taskId: number;
+  }) => Promise<void>;
 }
+
 interface PomodorosCtxProviderProps {
   children: ReactNode;
 }
