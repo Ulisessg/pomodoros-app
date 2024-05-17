@@ -1,7 +1,7 @@
 import { Modal, ModalCtx, ModalProvider } from "@/context/ModalCtx";
 import { TaskCtx } from "@/context/TaskCtx";
 import { Button, LoadingSpinner, TrashCan, theme } from "d-system";
-import React, { FC, use, useRef } from "react";
+import React, { FC, use } from "react";
 import styled from "styled-components";
 
 const DeleteTask: FC<Props> = ({ taskId, taskIndex, projectId, stageId }) => {

@@ -8,7 +8,7 @@ import {
   ValidationTypeError,
 } from "@/models/TableValidations";
 import TaskBackend from "@/models/task/TaskBackend";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 export default async function DELETE(req: NextRequest) {
   try {
@@ -26,6 +26,7 @@ export default async function DELETE(req: NextRequest) {
     }
 
     // Server error
+    // eslint-disable-next-line no-console
     console.log(error);
     return ServerErrorResponse;
   }

@@ -239,9 +239,13 @@ interface State {
     taskIndex: number
   ) => Promise<void>;
   deleteTask: (
+    // eslint-disable-next-line no-unused-vars
     taskId: number,
+    // eslint-disable-next-line no-unused-vars
     taskIndex: number,
+    // eslint-disable-next-line no-unused-vars
     projectId: number,
+    // eslint-disable-next-line no-unused-vars
     stageId: number
   ) => Promise<void>;
 }
