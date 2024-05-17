@@ -1,3 +1,4 @@
+import { redirectToProject } from "@/app/actions";
 import { CreateTaskBody } from "@/app/api/tasks/POST";
 import { PutTaskRequestBody } from "@/app/api/tasks/PUT";
 import { DragEventData } from "@/components/organisms/Task";
@@ -12,10 +13,12 @@ const initialState: State = {
   getTasks: async () => {},
   moveTaskToStage: async () => {},
   updateTask: async () => {},
+  deleteTask: async () => {},
   getTasksStatus: "none",
   updateTaskStageStatus: "none",
   updateTaskStatus: "none",
   createTaskStatus: "none",
+  deleteTaskStatus: "none",
 };
 
 export const TaskCtx = createContext(initialState);
@@ -41,6 +44,12 @@ export const TaskCtxProvider: FC<TaskCtxProps> = ({ children }) => {
     status: createTaskStatus,
     updateStatus: updateCreateTaskStatus,
     restartStatus: restartCreateTaskStatus,
+  } = useRequest();
+
+  const {
+    status: deleteTaskStatus,
+    updateStatus: setDeleteTaskStatus,
+    restartStatus: restartDeleteTaskStatus,
   } = useRequest();
 
   const addTask: State["addTask"] = async ({ description, name, stage_id }) => {
@@ -152,6 +161,40 @@ export const TaskCtxProvider: FC<TaskCtxProps> = ({ children }) => {
     }
   };
 
+  const deleteTask: State["deleteTask"] = async (
+    taskId,
+    taskIndex,
+    projectId,
+    stageId
+  ) => {
+    try {
+      if (!Number.isInteger(taskId))
+        throw new TypeError("Task id must be integer");
+      if (!Number.isInteger(taskIndex))
+        throw new TypeError("Task index must be integer");
+      setDeleteTaskStatus("pending");
+
+      const TaskFront = new TaskFrontend();
+      TaskFront.id = taskId;
+      await TaskFront.deleteTask();
+
+      setTasks((prev) => {
+        const updatedTasks = [...prev[Number(stageId)]];
+        updatedTasks.splice(taskIndex, 1);
+        return {
+          ...prev,
+          [Number(stageId)]: updatedTasks,
+        };
+      });
+      setDeleteTaskStatus("fulfilled");
+      await redirectToProject(projectId);
+    } catch (error) {
+      setDeleteTaskStatus("error");
+    } finally {
+      await restartDeleteTaskStatus();
+    }
+  };
+
   return (
     <TaskCtx.Provider
       value={{
@@ -160,10 +203,12 @@ export const TaskCtxProvider: FC<TaskCtxProps> = ({ children }) => {
         updateTaskStageStatus,
         updateTaskStatus,
         createTaskStatus,
+        deleteTaskStatus,
         addTask,
         getTasks,
         moveTaskToStage,
         updateTask,
+        deleteTask,
       }}
     >
       {children}
@@ -176,6 +221,7 @@ interface State {
   updateTaskStageStatus: Status;
   updateTaskStatus: Status;
   createTaskStatus: Status;
+  deleteTaskStatus: Status;
   tasks: TTask;
   // eslint-disable-next-line no-unused-vars
   addTask: (task: CreateTaskBody) => Promise<void>;
@@ -191,6 +237,12 @@ interface State {
     task: PutTaskRequestBody,
     // eslint-disable-next-line no-unused-vars
     taskIndex: number
+  ) => Promise<void>;
+  deleteTask: (
+    taskId: number,
+    taskIndex: number,
+    projectId: number,
+    stageId: number
   ) => Promise<void>;
 }
 
