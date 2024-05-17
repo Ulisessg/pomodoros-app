@@ -11,5 +11,5 @@ When("User is in auth page", () => {
 
 Then("User can access page", () => {
 	cy.get("h1").contains("Hello Every Nyan!");
-	HomeSelectProject("Pomodoros App");
+	HomeSelectProject("pomodoros");
 });

@@ -6,16 +6,27 @@ import { FC, Suspense } from "react";
 import { LoadingSpinner } from "d-system";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
 import { ModalProvider } from "@/context/ModalCtx";
+import DeleteTask from "@/components/molecules/DeleteTask";
 
 const TaskDetailPage = () => {
-  const { stage, task, project } = useGetTaskDataFromUrl();
+  const { stageId, taskId, projectId, taskIndex } = useGetTaskDataFromUrl();
 
   return (
     <SessionAuth>
       <ModalProvider>
-        <TaskDetails project={project} stage={stage} taskId={task} />
+        <TaskDetails
+          project={projectId}
+          stage={stageId}
+          taskIndex={taskIndex}
+        />
       </ModalProvider>
-      <ListPomodoros taskId={task} />
+      <ListPomodoros taskId={taskId} />
+      <DeleteTask
+        taskId={taskId}
+        taskIndex={taskIndex}
+        projectId={projectId}
+        stageId={stageId}
+      />
     </SessionAuth>
   );
 };

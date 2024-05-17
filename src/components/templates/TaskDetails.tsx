@@ -7,21 +7,13 @@ import getFirstObjectKey from "@/utils/getFirstObjectKey";
 import { Modal, ModalCtx } from "@/context/ModalCtx";
 import CreateUpdateTask from "../organisms/CreateUpdateTask";
 
-const TaskDetails: FC<TaskDetailsProps> = ({ project, stage, taskId }) => {
+const TaskDetails: FC<TaskDetailsProps> = ({ project, stage, taskIndex }) => {
   const { openModal } = use(ModalCtx);
   const TaskIndexRef = useRef<number>(0);
   const { tasks: tasksGroupedByStage, getTasks } = useContext(TaskCtx);
   const taskData = useMemo(() => {
-    return (
-      tasksGroupedByStage[stage]?.find((tsk, taskIndex) => {
-        if (tsk.id === taskId) {
-          TaskIndexRef.current = taskIndex;
-          return true;
-        }
-        return false;
-      }) || null
-    );
-  }, [stage, taskId, tasksGroupedByStage]);
+    return tasksGroupedByStage[stage]?.at(taskIndex) || null;
+  }, [stage, taskIndex, tasksGroupedByStage]);
 
   useEffect(() => {
     if (typeof getFirstObjectKey(tasksGroupedByStage) === "undefined") {
@@ -82,6 +74,6 @@ const ButtonEditTask = styled(Button)`
 interface TaskDetailsProps {
   stage: number;
   project: number;
-  taskId: number;
+  taskIndex: number;
 }
 export default TaskDetails;
