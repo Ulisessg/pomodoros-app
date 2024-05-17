@@ -68,7 +68,10 @@ export const PomodorosCtxProvider: FC<PomodorosCtxProviderProps> = ({
 
       setPomodoros((prev) => {
         const firstKey = getFirstObjectKey(prev);
-        if (typeof firstKey === "undefined") {
+        if (
+          typeof firstKey === "undefined" ||
+          typeof prev[Number(task_id)] === "undefined"
+        ) {
           return {
             [Number(task_id)]: [pomodoroCreated],
           };
