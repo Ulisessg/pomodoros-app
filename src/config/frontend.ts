@@ -5,28 +5,43 @@ import { useRouter } from "next/navigation";
 import { SuperTokensConfig } from "supertokens-auth-react/lib/build/types";
 
 const routerInfo: { router?: ReturnType<typeof useRouter>; pathName?: string } =
-	{};
+  {};
 
 export function setRouter(
-	router: ReturnType<typeof useRouter>,
-	pathName: string
+  router: ReturnType<typeof useRouter>,
+  pathName: string
 ) {
-	routerInfo.router = router;
-	routerInfo.pathName = pathName;
+  routerInfo.router = router;
+  routerInfo.pathName = pathName;
 }
 
 export const frontendConfig = (): SuperTokensConfig => {
-	return {
-		appInfo,
-		recipeList: [EmailPasswordReact.init(), SessionReact.init()],
-		windowHandler: (original) => ({
-			...original,
-			location: {
-				...original.location,
-				getPathName: () => routerInfo.pathName!,
-				assign: (url) => routerInfo.router!.push(url.toString()),
-				setHref: (url) => routerInfo.router!.push(url.toString()),
-			},
-		}),
-	};
+  return {
+    appInfo: {
+      ...(appInfo as any),
+      apiBasePath: "/pomodoros/api/auth",
+    },
+    recipeList: [
+      EmailPasswordReact.init({
+        signInAndUpFeature: {
+          signInForm: {
+            style: `[data-supertokens~=headerSubtitle] {
+display: none;
+}
+    `,
+          },
+        },
+      }),
+      SessionReact.init(),
+    ],
+    windowHandler: (original) => ({
+      ...original,
+      location: {
+        ...original.location,
+        getPathName: () => routerInfo.pathName!,
+        assign: (url) => routerInfo.router!.push(url.toString()),
+        setHref: (url) => routerInfo.router!.push(url.toString()),
+      },
+    }),
+  };
 };
