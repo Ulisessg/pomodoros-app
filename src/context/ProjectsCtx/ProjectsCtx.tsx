@@ -53,10 +53,9 @@ export const ProjectsCtxProvider: FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     const getProjects = async () => {
-      setGetProjectsStatus("pending");
-
       if (!session.loading) {
-        if (session.doesSessionExist) {
+        if (session.doesSessionExist && projects.length === 0) {
+          setGetProjectsStatus("pending");
           try {
             const Project = new ProjectFrontend();
             const projectsData = await Project.getProjects();
@@ -71,7 +70,7 @@ export const ProjectsCtxProvider: FC<{ children: ReactNode }> = ({
       }
     };
     void getProjects();
-  }, [session, setGetProjectsStatus]);
+  }, [session, setGetProjectsStatus, projects]);
   return (
     <ProjectsCtx.Provider
       value={{

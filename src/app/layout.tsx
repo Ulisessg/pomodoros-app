@@ -8,41 +8,45 @@ import { TaskCtxProvider } from "@/context/TaskCtx";
 import { PomodorosCtxProvider } from "@/context/PomodorosCtx";
 import HeaderComponent from "@/components/atoms/Header";
 import { StaticImagesPath } from "@/constants";
+import Sitemap from "@/components/molecules/Sitemap";
 
 export default function RootLayout({
-	children,
+  children,
 }: Readonly<{
-	children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-	return (
-		<html lang="es">
-			<head>
-				<title>Pomodoros app</title>
-				<link
-					rel="icon"
-					type="image/png"
-					href={`${StaticImagesPath}Tomato.png`}
-				/>
-			</head>
-			<body>
-				<div id="__next">
-					<SuperTokensProvider>
-						<UserCtxProvider>
-							<ProjectsCtxProvider>
-								<StagesCtxProvider>
-									<TaskCtxProvider>
-										<PomodorosCtxProvider>
-											<GlobalStyles header={<HeaderComponent />} footer={false}>
-												{children}
-											</GlobalStyles>
-										</PomodorosCtxProvider>
-									</TaskCtxProvider>
-								</StagesCtxProvider>
-							</ProjectsCtxProvider>
-						</UserCtxProvider>
-					</SuperTokensProvider>
-				</div>
-			</body>
-		</html>
-	);
+  return (
+    <html lang="es">
+      <head>
+        <title>Pomodoros app</title>
+        <link
+          rel="icon"
+          type="image/png"
+          href={`${StaticImagesPath}Tomato.png`}
+        />
+      </head>
+      <body>
+        <div id="__next">
+          <SuperTokensProvider>
+            <UserCtxProvider>
+              <ProjectsCtxProvider>
+                <StagesCtxProvider>
+                  <TaskCtxProvider>
+                    <PomodorosCtxProvider>
+                      <GlobalStyles header={<HeaderComponent />} footer={false}>
+                        <>
+                          <Sitemap />
+                          {children}
+                        </>
+                      </GlobalStyles>
+                    </PomodorosCtxProvider>
+                  </TaskCtxProvider>
+                </StagesCtxProvider>
+              </ProjectsCtxProvider>
+            </UserCtxProvider>
+          </SuperTokensProvider>
+        </div>
+      </body>
+    </html>
+  );
 }
