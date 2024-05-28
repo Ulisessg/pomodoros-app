@@ -1,5 +1,5 @@
 "use client";
-import { GlobalStyles } from "d-system";
+import { GlobalStyles, LoadingSpinner } from "d-system";
 import { SuperTokensProvider } from "@/providers/supertokensProvider";
 import { UserCtxProvider } from "@/context/UserCtx";
 import { ProjectsCtxProvider } from "@/context/ProjectsCtx";
@@ -9,6 +9,7 @@ import { PomodorosCtxProvider } from "@/context/PomodorosCtx";
 import HeaderComponent from "@/components/atoms/Header";
 import { StaticImagesPath } from "@/constants";
 import Sitemap from "@/components/molecules/Sitemap";
+import { Suspense } from "react";
 
 export default function RootLayout({
   children,
@@ -34,10 +35,10 @@ export default function RootLayout({
                   <TaskCtxProvider>
                     <PomodorosCtxProvider>
                       <GlobalStyles header={<HeaderComponent />} footer={false}>
-                        <>
+                        <Suspense fallback={<LoadingSpinner size="small" />}>
                           <Sitemap />
                           {children}
-                        </>
+                        </Suspense>
                       </GlobalStyles>
                     </PomodorosCtxProvider>
                   </TaskCtxProvider>
