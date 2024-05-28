@@ -57,7 +57,7 @@ const TaskSitemap = () => {
       .name;
   }, [projectId, projects]);
   const taskName = useMemo(() => {
-    return tasks[stageId][taskIndex]?.name;
+    return tasks?.[stageId]?.[taskIndex]?.name;
   }, [taskIndex, tasks, stageId]);
 
   return (
